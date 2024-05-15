@@ -1,9 +1,9 @@
 "use client";
 
 import Copyright from "@/app/components/Copyright";
-import { signup } from "@/controller/AuthController";
+import AuthController from "@/controller/AuthController";
 import { User } from "@/types/User";
-import { ZUserSchema } from "@/zod/UserSchema";
+import { ZUserSchema } from "@/utils/zod/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { LoadingButton } from "@mui/lab";
@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export default function SignUp() {
+export default function SignUpPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const {
     register,
@@ -30,7 +30,7 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<User> = (data) => {
     setLoading(true);
     const user: User = { ...data };
-    signup(user)
+    AuthController.signup(user)
       .then((response) => {
         reset();
         setLoading(false);

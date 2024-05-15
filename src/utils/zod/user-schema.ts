@@ -1,11 +1,9 @@
 import { z } from "zod";
 
 export const ZUserSchema = z.object({
-  name: z
-    .string({
-      required_error: "Nome é obrigatório.",
-    })
-    .min(5, "Nome é obrigatório."),
+  name: z.string({
+    required_error: "Nome é obrigatório.",
+  }),
   email: z
     .string({
       required_error: "E-mail é obrigatório.",
@@ -22,7 +20,10 @@ export const ZUserSchema = z.object({
     .string({
       required_error: "CPF é obrigatório.",
     })
-    .length(11, "CPF deve conter 11 caracteres.")
+    .refine((doc) => {
+      const replacedDoc = doc.replace(/\D/g, "");
+      return replacedDoc.length == 11;
+    }, "CPF deve conter no mínimo 11 caracteres.")
     .refine((doc) => {
       const replacedDoc = doc.replace(/\D/g, "");
       return !!Number(replacedDoc);
@@ -31,7 +32,10 @@ export const ZUserSchema = z.object({
     .string({
       required_error: "Matricula é obrigatória.",
     })
-    .length(9, "Matricula deve conter 11 caracteres.")
+    .refine((doc) => {
+      const replacedDoc = doc.replace(/\D/g, "");
+      return replacedDoc.length == 9;
+    }, "CPF deve conter no mínimo 9 caracteres.")
     .refine((doc) => {
       const replacedDoc = doc.replace(/\D/g, "");
       return !!Number(replacedDoc);
