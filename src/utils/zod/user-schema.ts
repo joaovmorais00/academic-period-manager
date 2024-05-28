@@ -32,12 +32,5 @@ export const ZUserSchema = z.object({
     .string({
       required_error: "Matricula é obrigatória.",
     })
-    .refine((doc) => {
-      const replacedDoc = doc.replace(/\D/g, "");
-      return replacedDoc.length == 9;
-    }, "CPF deve conter no mínimo 9 caracteres.")
-    .refine((doc) => {
-      const replacedDoc = doc.replace(/\D/g, "");
-      return !!Number(replacedDoc);
-    }, "Matricula deve conter apenas números."),
+    .min(5, "Matrícula é obrigatória"),
 });

@@ -1,4 +1,4 @@
-import AuthController from "@/controller/AuthController";
+import AuthController from "@/controllers/auth-controller";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -18,14 +18,14 @@ export const authOptions = {
           return null;
         }
         try {
-          const { data } = await AuthController.login(
+          const response = await AuthController.signin(
             credentials.email,
             credentials.password
           );
           return {
-            id: data.id,
-            name: data.name,
-            email: data.email,
+            id: response.id,
+            name: response.name,
+            email: response.email,
           };
         } catch (error) {
           return null;

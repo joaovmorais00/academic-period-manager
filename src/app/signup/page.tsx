@@ -1,7 +1,7 @@
 "use client";
 
-import Copyright from "@/app/components/Copyright";
-import AuthController from "@/controller/AuthController";
+import Copyright from "@/components/Copyright";
+import UserController from "@/controllers/user-controller";
 import { User } from "@/types/User";
 import { ZUserSchema } from "@/utils/zod/user-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,15 +30,13 @@ export default function SignUpPage() {
   const onSubmit: SubmitHandler<User> = (data) => {
     setLoading(true);
     const user: User = { ...data };
-    AuthController.signup(user)
+    UserController.signup(user)
       .then((response) => {
         reset();
         setLoading(false);
-        console.log(response);
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
       });
   };
 
