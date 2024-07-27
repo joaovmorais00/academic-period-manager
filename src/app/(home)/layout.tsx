@@ -1,19 +1,11 @@
-import {
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-} from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import styles from "./page.module.css";
+import Navbar from "@/components/Navbar/Navbar";
+import Copyright from "@/components/Copyright";
 
 export default async function layout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -21,48 +13,12 @@ export default async function layout({ children }: { children: ReactNode }) {
     redirect("/login");
   }
   return (
-    <>
-      <Drawer
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar />
-        <Divider />
-        <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      {children}
-    </>
+    <Box sx={{ display: "flex", width: "100%" }}>
+      <Navbar />
+      <Box component={"main"} className={styles.main}>
+        {children}
+        <Copyright sx={{ mt: 5 }} />
+      </Box>
+    </Box>
   );
 }

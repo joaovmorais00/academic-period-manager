@@ -17,9 +17,9 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { signIn } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const {
@@ -42,6 +42,7 @@ export default function LoginPage() {
       toast.error("Usuário ou senha incorretos");
     } else {
       toast.success("Bem-vindo");
+      console.log("é pra ir pra home");
       router.push("/");
     }
   };

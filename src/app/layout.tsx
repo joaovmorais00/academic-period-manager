@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import ToastProvider from "@/providers/ToastProvider";
+import Copyright from "@/components/Copyright";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body style={{ width: "100vw", margin: 0 }} className={inter.className}>
         <NextAuthProvider>
           <ToastProvider>{children}</ToastProvider>
         </NextAuthProvider>
