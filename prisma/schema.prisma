@@ -33,12 +33,11 @@ model Activity {
   createdBy       User     @relation(fields: [createdByUserId], references: [id])
   createdByUserId String
   name            String?
-  startDate       DateTime
-  endDate         DateTime
-  daysOfWeek      Int[]
-  startTimes      DateTime
-  endTimes        DateTime
-  Subject         Subject?
+  startDateTime   DateTime
+  endDateTime     DateTime
+  dayOfWeek       Int
+  Subject         Subject? @relation(fields: [subjectId], references: [id])
+  subjectId       String?
 }
 
 model Subject {
@@ -51,8 +50,7 @@ model Subject {
   teacher         String?
   description     String?
   assessments     Assessment[]
-  classes         Activity     @relation(fields: [activityId], references: [id])
-  activityId      String       @unique
+  classes         Activity[]
 }
 
 model Assessment {

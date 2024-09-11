@@ -1,8 +1,25 @@
 export interface Activity {
-  name: string;
+  name?: string;
   startDate: string;
   endDate: string;
-  daysOfWeek: number[];
-  startTimes: string;
-  endTimes: string;
+  daysOfWeek: string[];
+  startTime: string;
+  endTime: string;
 }
+
+export interface ModelActivity {
+  name?: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  dayOfWeek: number;
+}
+
+// Enum DaysOfWeek{
+//   Monday,
+//   Tuesday,
+//   Wednesday,
+//   Thursday,
+//   Friday,
+//   Saturday,
+//   Sunday,
+// }

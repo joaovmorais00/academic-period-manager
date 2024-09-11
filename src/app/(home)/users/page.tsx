@@ -1,7 +1,7 @@
 "use client";
 
-import EditUserDialog from "@/components/EditUserDialog/EditUserDialog";
-import TableBox from "@/components/Table/TableBox";
+import EditUserDialog from "@/components/Users/EditUserDialog/EditUserDialog";
+import TableBox from "@/components/common/Table/TableBox";
 import UserController from "@/controllers/user-controller";
 import { TableUser } from "@/types/User";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";

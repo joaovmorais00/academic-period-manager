@@ -1,6 +1,6 @@
-"use client";
 
-import UserForm from "@/components/UserForm/UserForm";
+
+import UserForm from "@/components/Users/UserForm/UserForm";
 import Container from "@mui/material/Container";
 
 export default function SignUpPage() {

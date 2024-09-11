@@ -1,3 +1,4 @@
+"use client"
 import UserController from "@/controllers/user-controller";
 import { CompletedUser, User } from "@/types/User";
 import { ZUserSchema } from "@/utils/zod/user-schema";

@@ -1,8 +1,12 @@
-import { Activity } from "./Activity";
+import { Activity, BackendActivity } from "./Activity";
+import { Assessment } from "./Assessment";
 
 export interface Subject {
   title: string;
   teacher?: string;
   description?: string;
-  classes: Activity;
+  classes?: Activity[];
+  assessments?: Assessment[];
 }
+
+
