@@ -13,13 +13,3 @@ export interface ModelActivity {
   endDateTime: Date;
   dayOfWeek: number;
 }
-
-// Enum DaysOfWeek{
-//   Monday,
-//   Tuesday,
-//   Wednesday,
-//   Thursday,
-//   Friday,
-//   Saturday,
-//   Sunday,
-// }

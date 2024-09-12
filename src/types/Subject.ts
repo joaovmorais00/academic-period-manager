@@ -1,4 +1,4 @@
-import { Activity, BackendActivity } from "./Activity";
+import { Activity } from "./Activity";
 import { Assessment } from "./Assessment";
 
 export interface Subject {
@@ -9,4 +9,8 @@ export interface Subject {
   assessments?: Assessment[];
 }
 
-
+export interface TableSubject {
+  id: string;
+  title: string;
+  teacher: string;
+}

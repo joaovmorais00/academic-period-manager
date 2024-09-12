@@ -21,3 +21,7 @@ export async function createSubject(subject: Subject, userId: string) {
     throw error;
   }
 }
+
+export async function getAllSubjects() {
+  return await prismaClient.subject.findMany();
+}

@@ -1,5 +1,5 @@
-import { createSubject } from "@/services/subject-service";
-import { Subject } from "@/types/Subject";
+import { createSubject, getAllSubjects } from "@/services/subject-service";
+import { Subject, TableSubject } from "@/types/Subject";
 import ActivityController from "./activity-controller";
 
 async function create(subject: Subject, userId: string) {
@@ -14,6 +14,19 @@ async function create(subject: Subject, userId: string) {
   }
 }
 
-const SubjectController = { create };
+async function getAll() {
+  const response = await getAllSubjects();
+  const subjects: TableSubject[] = response.map(
+    ({ id, title, teacher }) =>
+      ({
+        id,
+        title,
+        teacher,
+      } as TableSubject)
+  );
+  return subjects;
+}
+
+const SubjectController = { create, getAll };
 
 export default SubjectController;
