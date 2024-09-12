@@ -25,3 +25,7 @@ export async function createSubject(subject: Subject, userId: string) {
 export async function getAllSubjects() {
   return await prismaClient.subject.findMany();
 }
+
+export async function deleteSubject(id: string) {
+  return await prismaClient.subject.delete({ where: { id } });
+}

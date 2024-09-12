@@ -10,11 +10,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import SubjectController from "@/controllers/subject-controller";
+import { toast } from "react-toastify";
 
 export default function SubjectsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [subjects, setSubjects] = useState<TableSubject[]>([]);
+
+  useEffect(() => {
+    handleGetSubjects();
+  }, []);
 
   function handleGetSubjects() {
     setLoading(true);
@@ -25,9 +30,19 @@ export default function SubjectsPage() {
     setLoading(false);
   }
 
-  useEffect(() => {
-    handleGetSubjects();
-  }, []);
+  function handleDeleteSubject(id: string) {
+    setLoading(true);
+    SubjectController.remove(id)
+      .then(() => {
+        toast.success("Disciplina excluída com sucesso");
+        handleGetSubjects();
+      })
+      .catch((error) => {
+        console.log(error, "erro ao deletar");
+        toast.error("Não foi possível excluir a disciplina");
+      })
+      .finally(() => setLoading(false));
+  }
 
   const columns: GridColDef<TableSubject>[] = [
     { field: "id", headerName: "ID", width: 300 },
@@ -61,7 +76,7 @@ export default function SubjectsPage() {
           aria-label="delete"
           size="large"
           color="error"
-          // onClick={() => handleDeleteUser(params.id as string)}
+          onClick={() => handleDeleteSubject(params.id as string)}
         >
           <DeleteIcon fontSize="inherit" />
         </IconButton>,
@@ -74,7 +89,7 @@ export default function SubjectsPage() {
       <Typography variant="h4" className="mb-3">
         Disciplinas
       </Typography>
-      <Box marginTop={2}>
+      <Box marginTop={2} sx={{ display: "flex", justifyContent: "end" }}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

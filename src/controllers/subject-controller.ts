@@ -1,4 +1,8 @@
-import { createSubject, getAllSubjects } from "@/services/subject-service";
+import {
+  createSubject,
+  deleteSubject,
+  getAllSubjects,
+} from "@/services/subject-service";
 import { Subject, TableSubject } from "@/types/Subject";
 import ActivityController from "./activity-controller";
 
@@ -27,6 +31,10 @@ async function getAll() {
   return subjects;
 }
 
-const SubjectController = { create, getAll };
+async function remove(id: string) {
+  return await deleteSubject(id);
+}
+
+const SubjectController = { create, getAll, remove };
 
 export default SubjectController;
