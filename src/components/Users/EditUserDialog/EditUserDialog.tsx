@@ -29,7 +29,6 @@ export default function EditUserDialog({
     if (userToBeEdited) {
       UserController.get(userToBeEdited).then((response) => {
         if (response) setUserInfos(response);
-        console.log("teste", userToBeEdited, response, userInfos);
       });
     }
   }, [userToBeEdited]);
@@ -44,7 +43,6 @@ export default function EditUserDialog({
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries((formData as any).entries());
           const email = formJson.email;
-          console.log(email);
           handleClose();
         },
       }}

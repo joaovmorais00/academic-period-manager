@@ -1,16 +1,15 @@
 "use client";
-import styles from "./styles.module.css";
 import SubjectController from "@/controllers/subject-controller";
+import styles from "./styles.module.css";
 
-import { Subject } from "@/types/Subject";
+import { Subject, SubjectWithId } from "@/types/Subject";
 import { ZSubjectSchema } from "@/utils/zod/subject-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   Checkbox,
   FormControl,
   Grid,
@@ -35,41 +34,23 @@ import {
 } from "react-hook-form";
 import { toast } from "react-toastify";
 
-export default function SubjectForm() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
-  const session = useSession();
+interface SubjectFormProps {
+  id?: string;
+  subjectInfos?: SubjectWithId;
+}
 
-  // const daysOfWeek: DayOfWeek[] = [
-  //   {
-  //     name: "Domingo",
-  //     value: 0,
-  //   },
-  //   {
-  //     name: "Segunda-feira",
-  //     value: 1,
-  //   },
-  //   {
-  //     name: "Terça-feira",
-  //     value: 2,
-  //   },
-  //   {
-  //     name: "Quarta-feira",
-  //     value: 3,
-  //   },
-  //   {
-  //     name: "Quinta-feira",
-  //     value: 4,
-  //   },
-  //   {
-  //     name: "Sexta-feira",
-  //     value: 5,
-  //   },
-  //   {
-  //     name: "Sábado",
-  //     value: 6,
-  //   },
-  // ];
+export default function SubjectForm({ id = "" }: SubjectFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (id !== "") {
+      SubjectController.get(id).then((response) => {
+        reset(response);
+      });
+    }
+  }, [id]);
 
   const daysOfWeek = [
     "Domingo",
@@ -80,15 +61,20 @@ export default function SubjectForm() {
     "Sexta-feira",
     "Sábado",
   ];
+
   const {
     register,
     handleSubmit,
     control,
     reset,
     formState: { errors },
+    getFieldState,
   } = useForm<Subject>({
     resolver: zodResolver(ZSubjectSchema),
     defaultValues: {
+      title: "",
+      teacher: "",
+      description: "",
       classes: [
         {
           daysOfWeek: [],
@@ -112,19 +98,34 @@ export default function SubjectForm() {
 
   const onSubmit: SubmitHandler<Subject> = (data) => {
     setLoading(true);
-    console.log("Subject onSubmit", data);
     const subject: Subject = { ...data };
-    SubjectController.create(subject, session.data?.user?.id ?? "")
-      .then((response) => {
-        reset();
-        toast.success("Disciplina cadastrada com sucesso");
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log(error);
-        toast.error("Houve um erro ao cadastrar o usuário");
-      });
+    if (!id) {
+      SubjectController.create(subject, session.data?.user?.id ?? "")
+        .then((response) => {
+          reset();
+          toast.success("Disciplina cadastrada com sucesso");
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error("Houve um erro ao cadastrar a disciplina");
+        });
+    } else {
+      SubjectController.update(
+        { id, ...subject },
+        session.data?.user?.id ?? "",
+        getFieldState("classes").isDirty
+      )
+        .then((response) => {
+          toast.success("Disciplina atualizada com sucesso");
+          router.push("/subjects");
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error("Houve um erro ao atualizar a disciplina");
+        });
+    }
     setLoading(false);
   };
 
@@ -146,6 +147,7 @@ export default function SubjectForm() {
             fullWidth
             id="title"
             label="Título da Disciplina"
+            InputLabelProps={{ shrink: true }}
             autoFocus
             error={!!errors.title}
             helperText={errors.title?.message}
@@ -159,6 +161,7 @@ export default function SubjectForm() {
             fullWidth
             id="teacher"
             label="Professor"
+            InputLabelProps={{ shrink: true }}
             error={!!errors.teacher}
             helperText={errors.teacher?.message}
             {...register("teacher")}
@@ -170,6 +173,7 @@ export default function SubjectForm() {
             fullWidth
             id="description"
             label="Descrição"
+            InputLabelProps={{ shrink: true }}
             error={!!errors.description}
             helperText={errors.description?.message}
             {...register("description")}
@@ -177,19 +181,12 @@ export default function SubjectForm() {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6" className="mb-3">
-            Cadastro de Aulas
+            {!id ? "Cadastro de " : ""}Aulas
           </Typography>
         </Grid>
-        <Grid item xs={11}>
+        <Grid item container xs={11} rowSpacing={1}>
           {classesDates.map((field, index) => (
-            <Grid
-              item
-              container
-              key={field.id}
-              xs={12}
-              columnSpacing={1}
-              rowSpacing={1}
-            >
+            <Grid item container key={field.id} xs={12} columnSpacing={1}>
               {classesDates.length > 1 && (
                 <Grid item xs={1}>
                   <IconButton
@@ -307,7 +304,7 @@ export default function SubjectForm() {
         sx={{ mt: 3, mb: 2 }}
         loading={loading}
       >
-        {"Cadastrar"}
+        {!id ? "Cadastrar" : "Atualizar"}
       </LoadingButton>
     </Box>
   );

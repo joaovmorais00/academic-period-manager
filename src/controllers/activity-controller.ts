@@ -1,33 +1,61 @@
 import { createDateInDefaultTimezone } from "@/config/dayjs";
-import { createActivity } from "@/services/activity-service";
-import { createSubject } from "@/services/subject-service";
+import {
+  createManyActivities,
+  deleteAllSubjectClasses,
+  getActivitiesBySubjectIdService,
+} from "@/services/activity-service";
 import { Activity, ModelActivity } from "@/types/Activity";
-import { Subject } from "@/types/Subject";
-import { createDateTimeString } from "@/utils/createDateTimeString";
-import { daysOfWeekToNumber } from "@/utils/daysOfWeekToNumber";
-import dayjs from "dayjs";
+import Dates from "@/utils/Dates";
+import DaysOfWeek from "@/utils/DaysOfWeek";
 
-async function create(activity: Activity, userId: string, subjectId: string) {
-  try {
-    activity.daysOfWeek.forEach(async (day) => {
-      const modelActivity: ModelActivity = {
-        dayOfWeek: daysOfWeekToNumber(day),
+async function createMany(
+  activities: Activity[],
+  userId: string,
+  subjectId: string
+) {
+  let modelActivities: ModelActivity[] = [];
+  activities.map((activity) =>
+    activity.daysOfWeek.map((dayOfWeek) => {
+      modelActivities.push({
+        createdByUserId: userId,
+        name: subjectId ? `${subjectId}-classes` : activity.name ?? "",
+        dayOfWeek: DaysOfWeek.daysOfWeekToNumber(dayOfWeek),
         startDateTime: createDateInDefaultTimezone(
-          createDateTimeString(activity.startDate, activity.startTime)
+          Dates.createDateTimeString(activity.startDate, activity.startTime)
         ).toDate(),
         endDateTime: createDateInDefaultTimezone(
-          createDateTimeString(activity.endDate, activity.endTime)
+          Dates.createDateTimeString(activity.endDate, activity.endTime)
         ).toDate(),
-      };
-      await createActivity(modelActivity, userId, subjectId);
-    });
-
-    return true;
-  } catch (error) {
-    throw error;
-  }
+        subjectId,
+      });
+    })
+  );
+  return await createManyActivities(modelActivities);
 }
 
-const ActivityController = { create };
+async function getActivitiesBySubjectId(subjectId: string) {
+  const activities = await getActivitiesBySubjectIdService(subjectId);
+  return activities.map(
+    ({ id, name, startDateTime, endDateTime, dayOfWeek }) => ({
+      id,
+      name,
+      daysOfWeek: [DaysOfWeek.daysOfWeekToString(dayOfWeek)],
+      startDate: Dates.DateTimeToStringDate(startDateTime),
+      endDate: Dates.DateTimeToStringDate(endDateTime),
+      startTime: Dates.DateTimeToStringTime(startDateTime),
+      endTime: Dates.DateTimeToStringTime(endDateTime),
+    })
+  );
+}
+
+async function deleteAllSubjectActivities(subjectId: string) {
+  return await deleteAllSubjectClasses(subjectId);
+}
+
+const ActivityController = {
+  createMany,
+  getActivitiesBySubjectId,
+  deleteAllSubjectActivities,
+};
 
 export default ActivityController;

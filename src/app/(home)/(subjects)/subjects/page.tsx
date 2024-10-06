@@ -1,6 +1,5 @@
 "use client";
 
-import TableBox from "@/components/common/Table/TableBox";
 import { TableSubject } from "@/types/Subject";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton, Typography } from "@mui/material";
@@ -11,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import SubjectController from "@/controllers/subject-controller";
 import { toast } from "react-toastify";
+import TableBox from "@/components/common/Table/TableBox";
 
 export default function SubjectsPage() {
   const router = useRouter();
@@ -25,7 +25,6 @@ export default function SubjectsPage() {
     setLoading(true);
     SubjectController.getAll().then((response) => {
       setSubjects(response);
-      console.log(response);
     });
     setLoading(false);
   }
@@ -38,7 +37,6 @@ export default function SubjectsPage() {
         handleGetSubjects();
       })
       .catch((error) => {
-        console.log(error, "erro ao deletar");
         toast.error("Não foi possível excluir a disciplina");
       })
       .finally(() => setLoading(false));
@@ -66,8 +64,7 @@ export default function SubjectsPage() {
           aria-label="edit"
           size="large"
           onClick={() => {
-            // setUserToBeEdited(params.id as string);
-            // setOpenEditUser(true);
+            router.push(`subject/${params.id}`);
           }}
         >
           <EditIcon fontSize="inherit" />
