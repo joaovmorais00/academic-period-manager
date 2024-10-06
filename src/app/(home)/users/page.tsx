@@ -2,12 +2,12 @@
 
 import EditUserDialog from "@/components/Users/EditUserDialog/EditUserDialog";
 import TableBox from "@/components/common/Table/TableBox";
+import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
 import UserController from "@/controllers/user-controller";
 import { TableUser } from "@/types/User";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -97,10 +97,7 @@ export default function Users() {
   }, []);
 
   return (
-    <Box>
-      <Typography variant="h4" className="mb-3">
-        Usuários
-      </Typography>
+    <TemplatePage title="Usuários">
       <TableBox>
         <DataGrid
           loading={loading}
@@ -123,6 +120,6 @@ export default function Users() {
         handleClose={handleCloseDialog}
         handleSuccessfulUpdate={handleSuccessfulUpdate}
       />
-    </Box>
+    </TemplatePage>
   );
 }

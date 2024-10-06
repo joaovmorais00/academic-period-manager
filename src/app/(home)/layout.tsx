@@ -13,11 +13,11 @@ export default async function layout({ children }: { children: ReactNode }) {
     redirect("/login");
   }
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box display={"flex"} width={"100%"}>
       <Navbar />
       <Box component={"main"} className={styles.main}>
         {children}
-        <Copyright sx={{ mt: 5 }} />
+        <Copyright marginTop={5} />
       </Box>
     </Box>
   );

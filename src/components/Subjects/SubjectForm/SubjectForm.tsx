@@ -134,12 +134,7 @@ export default function SubjectForm({ id = "" }: SubjectFormProps) {
   };
 
   return (
-    <Box
-      component="form"
-      noValidate
-      sx={{ mt: 3 }}
-      onSubmit={handleSubmit(onSubmit, onError)}
-    >
+    <Box component="form" noValidate onSubmit={handleSubmit(onSubmit, onError)}>
       <Grid container rowSpacing={2}>
         <Grid item xs={12}>
           <TextField
