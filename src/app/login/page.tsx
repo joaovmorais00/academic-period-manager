@@ -42,7 +42,6 @@ export default function LoginPage() {
       toast.error("Usuário ou senha incorretos");
     } else {
       toast.success("Bem-vindo");
-      console.log("é pra ir pra home");
       router.push("/");
     }
   };

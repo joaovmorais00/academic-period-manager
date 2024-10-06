@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { ReactNode } from "react";
 
 export default function TableBox({ children }: { children: ReactNode }) {

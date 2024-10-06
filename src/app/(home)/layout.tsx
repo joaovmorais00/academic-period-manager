@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import styles from "./page.module.css";
-import Navbar from "@/components/Navbar/Navbar";
+import Navbar from "@/components/common/Navbar/Navbar";
 import Copyright from "@/components/Copyright";
 
 export default async function layout({ children }: { children: ReactNode }) {
