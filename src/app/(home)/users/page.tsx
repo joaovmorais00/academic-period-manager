@@ -65,7 +65,6 @@ export default function Users() {
         return { id, name, email };
       });
       setUsers(result);
-      console.log(response, users);
     });
     setLoading(false);
   }
@@ -81,7 +80,6 @@ export default function Users() {
   }
 
   function handleDeleteUser(idUser: string) {
-    console.log(idUser, "chegou");
     setLoading(true);
     UserController.deleteUser(idUser)
       .then(() => {
@@ -89,7 +87,6 @@ export default function Users() {
         handleGetUsers();
       })
       .catch((error) => {
-        console.log(error, "erro ao deletar");
         toast.error("Não foi possível excluir o usuário");
       })
       .finally(() => setLoading(false));
@@ -98,10 +95,6 @@ export default function Users() {
   useEffect(() => {
     handleGetUsers();
   }, []);
-
-  useEffect(() => {
-    console.log("users", users);
-  }, [users]);
 
   return (
     <Box>

@@ -22,16 +22,14 @@ export const authOptions: NextAuthOptions = {
             credentials.email,
             credentials.password
           );
-          console.log(response, "voltando do login");
-          if(response) { 
+          if (response) {
             const user = {
               id: response.id,
               name: response.name,
               email: response.email,
-            }
-            return user
-          }
-          else return null;
+            };
+            return user;
+          } else return null;
         } catch (error) {
           return null;
         }
@@ -40,8 +38,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token, user }) {
-      console.log(session.user, token,  user, "session session")
-      session.user.id = token.sub as string; 
+      session.user.id = token.sub as string;
       return session;
     },
     // async jwt({ token, account, profile }) {
@@ -52,7 +49,6 @@ export const authOptions: NextAuthOptions = {
     //   }
     //   return token
     // }
-    
   },
 };
 

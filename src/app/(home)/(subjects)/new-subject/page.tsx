@@ -1,12 +1,11 @@
-import SubjectForm from "@/components/Subjects/SubjectForm";
+import TitlePage from "@/components/common/TitlePage/TitlePage";
+import SubjectForm from "@/components/Subjects/SubjectForm/SubjectForm";
 import { Box, Typography } from "@mui/material";
 
 export default function NewSubject() {
   return (
     <Box>
-      <Typography variant="h4" className="mb-3">
-        Nova Disciplina
-      </Typography>
+      <TitlePage title="Nova Disciplina" />
       <SubjectForm />
     </Box>
   );

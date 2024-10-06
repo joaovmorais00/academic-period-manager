@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import UserController from "@/controllers/user-controller";
 import { CompletedUser, User } from "@/types/User";
 import { ZUserSchema } from "@/utils/zod/user-schema";
@@ -63,7 +63,6 @@ export default function UserForm({
           toast.success("Houve um erro ao cadastrar o usuário");
         });
     } else {
-      console.log("chamou update");
       UserController.update(id, user)
         .then((response) => {
           reset();
