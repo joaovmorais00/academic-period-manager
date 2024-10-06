@@ -78,12 +78,10 @@ export default function UserForm({
   };
   return (
     <Box
-      sx={{
-        marginTop: !id ? 8 : 0,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
+      display={"flex"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      marginTop={!id ? 8 : 0}
     >
       {!id && (
         <>
@@ -98,7 +96,7 @@ export default function UserForm({
       <Box
         component="form"
         noValidate
-        sx={{ mt: 3 }}
+        marginTop={3}
         onSubmit={handleSubmit(onSubmit)}
       >
         <Grid container spacing={2}>

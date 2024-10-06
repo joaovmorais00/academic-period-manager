@@ -6,7 +6,6 @@ export default async function Home() {
   return (
     <div>
       <p>Olá {session?.user?.name}</p>
-      <p>Só fica aqui se estiver logado</p>
     </div>
   );
 }

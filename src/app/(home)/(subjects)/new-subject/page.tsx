@@ -1,12 +1,10 @@
-import TitlePage from "@/components/common/TitlePage/TitlePage";
+import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
 import SubjectForm from "@/components/Subjects/SubjectForm/SubjectForm";
-import { Box, Typography } from "@mui/material";
 
 export default function NewSubject() {
   return (
-    <Box>
-      <TitlePage title="Nova Disciplina" />
+    <TemplatePage title="Nova Disciplina" backButton>
       <SubjectForm />
-    </Box>
+    </TemplatePage>
   );
 }
