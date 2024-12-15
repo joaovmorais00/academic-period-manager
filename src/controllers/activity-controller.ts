@@ -3,10 +3,16 @@ import {
   createManyActivities,
   deleteAllSubjectClasses,
   getActivitiesBySubjectIdService,
+  getAllActivitiesByUserId,
 } from "@/services/activity-service";
 import { Activity, ModelActivity } from "@/types/Activity";
 import Dates from "@/utils/Dates";
 import DaysOfWeek from "@/utils/DaysOfWeek";
+import { EventInput, EventSourceInput } from "@fullcalendar/core/index.js";
+import dayjs from "dayjs";
+import { title } from "process";
+import { start } from "repl";
+import SubjectController from "./subject-controller";
 
 async function createMany(
   activities: Activity[],
@@ -52,10 +58,20 @@ async function deleteAllSubjectActivities(subjectId: string) {
   return await deleteAllSubjectClasses(subjectId);
 }
 
+async function getAllActivitiesFromUserIdToEvents(userId: string) {
+  const classes: EventInput[] =
+    await SubjectController.getAllClassesByUserIdToEvents(userId);
+
+  const events: EventInput[] = [...classes];
+
+  return events;
+}
+
 const ActivityController = {
   createMany,
   getActivitiesBySubjectId,
   deleteAllSubjectActivities,
+  getAllActivitiesFromUserIdToEvents,
 };
 
 export default ActivityController;

@@ -36,10 +36,13 @@ import { toast } from "react-toastify";
 
 interface SubjectFormProps {
   id?: string;
-  subjectInfos?: SubjectWithId;
+  successfulCreateEvent?: () => void;
 }
 
-export default function SubjectForm({ id = "" }: SubjectFormProps) {
+export default function SubjectForm({
+  id = "",
+  successfulCreateEvent = () => {},
+}: SubjectFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const session = useSession();
   const router = useRouter();
@@ -104,6 +107,7 @@ export default function SubjectForm({ id = "" }: SubjectFormProps) {
         .then((response) => {
           reset();
           toast.success("Disciplina cadastrada com sucesso");
+          successfulCreateEvent();
           setLoading(false);
         })
         .catch((error) => {
