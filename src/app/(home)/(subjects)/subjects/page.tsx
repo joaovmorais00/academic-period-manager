@@ -11,21 +11,26 @@ import { useEffect, useState } from "react";
 import SubjectController from "@/controllers/subject-controller";
 import { toast } from "react-toastify";
 import TableBox from "@/components/common/Table/TableBox";
+import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
+import { useSession } from "next-auth/react";
 
 export default function SubjectsPage() {
+  const session = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [subjects, setSubjects] = useState<TableSubject[]>([]);
 
   useEffect(() => {
-    handleGetSubjects();
-  }, []);
+    if (session.data?.user.id) handleGetSubjects();
+  }, [session]);
 
   function handleGetSubjects() {
     setLoading(true);
-    SubjectController.getAll().then((response) => {
-      setSubjects(response);
-    });
+    SubjectController.getAllByUserId(session.data?.user.id ?? "").then(
+      (response) => {
+        setSubjects(response);
+      }
+    );
     setLoading(false);
   }
 
@@ -82,11 +87,8 @@ export default function SubjectsPage() {
   ];
 
   return (
-    <Box>
-      <Typography variant="h4" className="mb-3">
-        Disciplinas
-      </Typography>
-      <Box marginTop={2} sx={{ display: "flex", justifyContent: "end" }}>
+    <TemplatePage title="Disciplinas">
+      <Box display={"flex"} justifyContent="end" marginBottom={3}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -111,6 +113,6 @@ export default function SubjectsPage() {
           disableRowSelectionOnClick
         />
       </TableBox>
-    </Box>
+    </TemplatePage>
   );
 }

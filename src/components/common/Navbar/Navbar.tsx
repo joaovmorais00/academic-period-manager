@@ -1,6 +1,7 @@
+import BookIcon from "@mui/icons-material/Book";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
-import BookIcon from "@mui/icons-material/Book";
 import {
   Divider,
   Drawer,
@@ -12,7 +13,37 @@ import {
   Toolbar,
 } from "@mui/material";
 import Link from "next/link";
+import { ReactElement } from "react";
 import ButtonLogout from "./ButtonLogout";
+
+interface itemMenu {
+  name: string;
+  link: string;
+  icon: ReactElement<any, any>;
+}
+
+const itemsMenu: itemMenu[] = [
+  {
+    name: "Home",
+    link: "/",
+    icon: <HomeIcon />,
+  },
+  {
+    name: "Usuários",
+    link: "/users",
+    icon: <PersonIcon />,
+  },
+  {
+    name: "Disciplinas",
+    link: "/subjects",
+    icon: <BookIcon />,
+  },
+  {
+    name: "Agenda",
+    link: "/scheduler",
+    icon: <CalendarMonthIcon />,
+  },
+];
 
 export default function Navbar() {
   return (
@@ -31,36 +62,16 @@ export default function Navbar() {
       <Toolbar />
       <Divider />
       <List>
-        <ListItem disablePadding>
-          <Link href={"/"}>
-            <ListItemButton>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Home"} />
-            </ListItemButton>
-          </Link>
-        </ListItem>
-        <Link href={"/users"}>
+        {itemsMenu.map((item) => (
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Usuários"} />
-            </ListItemButton>
+            <Link href={item.link}>
+              <ListItemButton>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.name} />
+              </ListItemButton>
+            </Link>
           </ListItem>
-        </Link>
-        <Link href={"/subjects"}>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <BookIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Disciplinas"} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+        ))}
         <ButtonLogout />
       </List>
     </Drawer>

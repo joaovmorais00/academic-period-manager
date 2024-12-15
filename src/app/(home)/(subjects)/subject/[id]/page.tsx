@@ -1,12 +1,10 @@
+import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
 import SubjectForm from "@/components/Subjects/SubjectForm/SubjectForm";
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import TitlePage from "@/components/common/TitlePage/TitlePage";
 
 export default function NewSubject({ params }: { params: { id: string } }) {
   return (
-    <Box>
-      <TitlePage title="Atualizar Página" />
+    <TemplatePage title="Atualizar Página" backButton>
       <SubjectForm id={params.id} />
-    </Box>
+    </TemplatePage>
   );
 }

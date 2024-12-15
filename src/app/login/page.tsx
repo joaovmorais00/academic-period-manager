@@ -48,7 +48,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main" height={"100vh"}>
         <CssBaseline />
         <Grid
           item
@@ -87,7 +87,7 @@ export default function LoginPage() {
               component="form"
               noValidate
               onSubmit={handleSubmit(onSubmit)}
-              sx={{ mt: 1 }}
+              marginTop={1}
             >
               <TextField
                 margin="normal"
