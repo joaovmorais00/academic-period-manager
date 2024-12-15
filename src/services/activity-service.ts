@@ -19,6 +19,12 @@ export async function getActivitiesBySubjectIdService(subjectId: string) {
   return await prismaClient.activity.findMany({ where: { subjectId } });
 }
 
+export async function getAllActivitiesByUserId(userId: string) {
+  return await prismaClient.activity.findMany({
+    where: { createdByUserId: userId },
+  });
+}
+
 export async function deleteAllSubjectClasses(subjectId: string) {
   return await prismaClient.activity.deleteMany({
     where: {

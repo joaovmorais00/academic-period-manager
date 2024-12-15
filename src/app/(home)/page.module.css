@@ -1,9 +1,8 @@
 .main {
   padding: 2rem;
   flex-grow: 1;
-  overflow: 'hidden';
+  overflow: "hidden";
   width: calc(100vw - 20rem);
   display: flex;
   flex-direction: column;
 }
-

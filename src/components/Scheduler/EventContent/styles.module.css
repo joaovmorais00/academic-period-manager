@@ -1,0 +1,23 @@
+.iconEvent {
+  display: flex;
+  align-items: center;
+}
+
+.iconSize {
+  font-size: 1rem;
+}
+
+.iconEvent & .css-ptiqhd-MuiSvgIcon-root {
+  height: 0.5em;
+  width: 0.5em;
+}
+
+.timeEvent {
+  margin: 0 3px;
+}
+
+.titleEvent {
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
