@@ -35,10 +35,6 @@ export async function updateSubject(subject: SubjectWithId, userId: string) {
   });
 }
 
-export async function getSubjectById(id: string) {
-  return await prismaClient.subject.findFirst({ where: { id } });
-}
-
 export async function getAllSubjectsByUserId(id: string) {
   return await prismaClient.subject.findMany({
     where: { createdByUserId: id },
@@ -52,6 +48,17 @@ export async function deleteSubject(id: string) {
 export async function getAllClassesByUserId(userId: string) {
   return await prismaClient.subject.findMany({
     where: { createdByUserId: userId },
+    include: {
+      classes: true,
+    },
+  });
+}
+
+export async function getSubjectById(id: string) {
+  return await prismaClient.subject.findFirst({
+    where: {
+      id,
+    },
     include: {
       classes: true,
     },

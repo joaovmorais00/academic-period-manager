@@ -10,6 +10,8 @@ import { Subject, SubjectWithId, TableSubject } from "@/types/Subject";
 import ActivityController from "./activity-controller";
 import dayjs from "dayjs";
 import { EventInput } from "@fullcalendar/core/index.js";
+import DaysOfWeek from "@/utils/DaysOfWeek";
+import Dates from "@/utils/Dates";
 
 async function create(subject: Subject, userId: string) {
   try {
@@ -26,17 +28,26 @@ async function create(subject: Subject, userId: string) {
 }
 
 async function get(id: string) {
-  const subject = await getSubjectById(id);
-  if (subject) {
-    const classes = await ActivityController.getActivitiesBySubjectId(id);
-
-    return {
-      ...subject,
-      teacher: !subject.teacher ? "" : subject.teacher,
-      description: !subject.description ? "" : subject.description,
-      classes,
-    };
-  }
+  const response = await getSubjectById(id);
+  const classes = response?.classes.map(
+    ({ id, name, startDateTime, endDateTime, dayOfWeek }) => ({
+      id,
+      name,
+      daysOfWeek: [DaysOfWeek.daysOfWeekToString(dayOfWeek)],
+      startDate: Dates.DateTimeToStringDate(startDateTime),
+      endDate: Dates.DateTimeToStringDate(endDateTime),
+      startTime: Dates.DateTimeToStringTime(startDateTime),
+      endTime: Dates.DateTimeToStringTime(endDateTime),
+    })
+  );
+  const subject = {
+    ...response,
+    title: response?.title ?? "",
+    teacher: !response?.teacher ? "" : response.teacher,
+    description: !response?.description ? "" : response.description,
+    classes,
+  };
+  return subject;
 }
 
 async function getAllByUserId(userId: string) {
