@@ -7,7 +7,7 @@ import {
   updateSubject,
 } from "@/services/subject-service";
 import { Subject, SubjectWithId, TableSubject } from "@/types/Subject";
-import ActivityController from "./activity-controller";
+import AppointmentController from "./appointment-controller";
 import dayjs from "dayjs";
 import { EventInput } from "@fullcalendar/core/index.js";
 import DaysOfWeek from "@/utils/DaysOfWeek";
@@ -16,7 +16,7 @@ import Dates from "@/utils/Dates";
 async function create(subject: Subject, userId: string) {
   try {
     const createdSubject = await createSubject(subject, userId);
-    await ActivityController.createMany(
+    await AppointmentController.createManyClasses(
       subject.classes ?? [],
       userId,
       createdSubject.id
@@ -29,11 +29,11 @@ async function create(subject: Subject, userId: string) {
 
 async function get(id: string) {
   const response = await getSubjectById(id);
-  const classes = response?.classes.map(
+  const classes = response?.classesAndStudyTimes.map(
     ({ id, name, startDateTime, endDateTime, dayOfWeek }) => ({
       id,
       name,
-      daysOfWeek: [DaysOfWeek.daysOfWeekToString(dayOfWeek)],
+      daysOfWeek: dayOfWeek ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)] : [],
       startDate: Dates.DateTimeToStringDate(startDateTime),
       endDate: Dates.DateTimeToStringDate(endDateTime),
       startTime: Dates.DateTimeToStringTime(startDateTime),
@@ -74,8 +74,8 @@ async function update(
 ) {
   await updateSubject(subject, userId);
   if (updateClasses) {
-    await ActivityController.deleteAllSubjectActivities(subject.id);
-    await ActivityController.createMany(
+    await AppointmentController.deleteAllSubjectAppointments(subject.id);
+    await AppointmentController.createManyClasses(
       subject.classes ?? [],
       userId,
       subject.id
@@ -88,11 +88,11 @@ async function getAllClassesByUserIdToEvents(userId: string) {
   const events: EventInput[] = [];
   const subjects = await getAllClassesByUserId(userId);
   subjects.map((subject) =>
-    subject.classes.map((activity) => {
-      let dayAux = dayjs(activity.startDateTime);
-      const endDate = dayjs(activity.endDateTime);
+    subject.classesAndStudyTimes.map((appointment) => {
+      let dayAux = dayjs(appointment.startDateTime);
+      const endDate = dayjs(appointment.endDateTime);
       while (dayAux.isAfter(endDate, "day") === false) {
-        if (dayAux.day() === activity.dayOfWeek) {
+        if (dayAux.day() === appointment.dayOfWeek) {
           events.push({
             title: subject.title,
             start: dayAux.toDate(),

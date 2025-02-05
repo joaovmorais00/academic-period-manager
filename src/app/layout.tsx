@@ -20,7 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        style={{ width: "100vw", margin: 0, overflowX: "hidden" }}
+        style={{
+          width: "100vw",
+          height: "100vh",
+          margin: 0,
+          overflowX: "hidden",
+        }}
         className={inter.className}
       >
         <NextAuthProvider>

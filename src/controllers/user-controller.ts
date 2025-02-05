@@ -54,6 +54,22 @@ async function get(id: string) {
   }
 }
 
-const UserController = { signup, getAllUsers, deleteUser, update, get };
+async function isAdmin(id: string) {
+  try {
+    const response = await getUser(id);
+    return response?.isAdmin;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const UserController = {
+  signup,
+  getAllUsers,
+  deleteUser,
+  update,
+  get,
+  isAdmin,
+};
 
 export default UserController;

@@ -1,11 +1,11 @@
-import { Activity, ActivityWithId } from "./Activity";
+import { Appointment, AppointmentWithId } from "./Appointment";
 import { Assessment } from "./Assessment";
 
 export interface Subject {
   title: string;
   teacher: string;
   description?: string;
-  classes?: Activity[] | ActivityWithId[];
+  classes?: Appointment[] | AppointmentWithId[];
   assessments?: Assessment[];
 }
 

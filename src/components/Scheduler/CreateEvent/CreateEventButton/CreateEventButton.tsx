@@ -1,7 +1,6 @@
+import AddIcon from "@mui/icons-material/Add";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import styles from "./styles.module.css";
 
 interface Props {
   handleSelectTypeEvent: (typeEvent: string) => void;
@@ -49,6 +48,21 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
           onClick={() => handleClickTypeEvent("class")}
         >
           Aula
+        </MenuItem>
+        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+          Prova
+        </MenuItem>
+        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+          Atividade Avaliativa
+        </MenuItem>
+        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+          Reunião
+        </MenuItem>
+        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+          Atividade Complementar
+        </MenuItem>
+        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+          Horário de Estudo
         </MenuItem>
       </Menu>
     </>
