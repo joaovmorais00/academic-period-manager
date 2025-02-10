@@ -78,8 +78,8 @@ model Test {
   score           Int?
   worth           Int?
   studyTimes      Appointment[]
-  Subject         Subject       @relation(fields: [subjectId], references: [id])
-  subjectId       String
+  Subject         Subject?      @relation(fields: [subjectId], references: [id])
+  subjectId       String?
 }
 
 model AssessmentActivity {

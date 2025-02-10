@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { EventInput } from "@fullcalendar/core/index.js";
 import DaysOfWeek from "@/utils/DaysOfWeek";
 import Dates from "@/utils/Dates";
+import TestController from "./test-controller";
 
 async function create(subject: Subject, userId: string) {
   try {
@@ -21,8 +22,11 @@ async function create(subject: Subject, userId: string) {
       userId,
       createdSubject.id
     );
+    await TestController.create(subject.tests ?? [], userId, createdSubject.id);
+
     return true;
   } catch (error) {
+    console.log(error, "create disciplina");
     throw error;
   }
 }

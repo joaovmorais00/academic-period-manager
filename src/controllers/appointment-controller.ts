@@ -1,6 +1,6 @@
 import { createDateInDefaultTimezone } from "@/config/dayjs";
 import {
-  createManyAppointments,
+  createClasses,
   deleteAllSubjectClasses,
   getAppointmentsBySubjectIdService,
 } from "@/services/appointment-service";
@@ -32,10 +32,11 @@ async function createManyClasses(
           Dates.createDateTimeString(appointment.endDate, appointment.endTime)
         ).toDate(),
         subjectId,
+        type: "CLASS",
       });
     })
   );
-  return await createManyAppointments(modelAppointments);
+  return await createClasses(modelAppointments);
 }
 
 async function getAppointmentsBySubjectId(subjectId: string) {
