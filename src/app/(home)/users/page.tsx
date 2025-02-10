@@ -9,6 +9,8 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -56,6 +58,8 @@ export default function Users() {
   const [loading, setLoading] = useState<boolean>(true);
   const [openEditUser, setOpenEditUser] = useState<boolean>(false);
   const [userToBeEdited, setUserToBeEdited] = useState<string>("");
+  const session = useSession();
+  const router = useRouter();
 
   function handleGetUsers() {
     setLoading(true);
@@ -93,8 +97,12 @@ export default function Users() {
   }
 
   useEffect(() => {
-    handleGetUsers();
-  }, []);
+    if (session.data?.user.id) {
+      UserController.isAdmin(session.data?.user.id).then((response) =>
+        response ? router.replace("/") : handleGetUsers()
+      );
+    }
+  }, [session]);
 
   return (
     <TemplatePage title="Usuários">

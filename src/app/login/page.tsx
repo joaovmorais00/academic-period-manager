@@ -57,7 +57,7 @@ export default function LoginPage() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+              "url(https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -77,7 +77,7 @@ export default function LoginPage() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, bgcolor: "#41424C " }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">

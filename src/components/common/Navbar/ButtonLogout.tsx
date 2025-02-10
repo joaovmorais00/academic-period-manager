@@ -10,6 +10,7 @@ import {
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import LogoutIcon from "@mui/icons-material/Logout";
+import styles from "./styles.module.css";
 
 export default function ButtonLogout() {
   const router = useRouter();
@@ -21,8 +22,8 @@ export default function ButtonLogout() {
   }
   return (
     <ListItem disablePadding onClick={logout}>
-      <ListItemButton>
-        <ListItemIcon>
+      <ListItemButton className={styles.listItem}>
+        <ListItemIcon className={styles.listItemIcon}>
           <LogoutIcon />
         </ListItemIcon>
         <ListItemText primary={"Sair"} />

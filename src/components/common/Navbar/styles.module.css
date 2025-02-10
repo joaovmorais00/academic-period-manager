@@ -1,0 +1,12 @@
+.listItem {
+  color: #fff;
+  width: 100%;
+}
+
+.listItem:hover {
+  background-color: rgba(58, 61, 64, 0.8);
+}
+
+.listItemIcon {
+  color: #fff;
+}

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ZActivitySchema = z.object({
+export const ZAppointmentSchema = z.object({
   name: z.string().optional(),
   startDate: z.string(),
   endDate: z.string(),

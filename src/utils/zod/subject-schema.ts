@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ZActivitySchema } from "./activity-schema";
+import { ZAppointmentSchema } from "./appointment-schema";
 import { ZAssessmentSchema } from "./assessment-schema";
 
 export const ZSubjectSchema = z.object({
@@ -8,6 +8,6 @@ export const ZSubjectSchema = z.object({
   }),
   teacher: z.string().optional(),
   description: z.string().optional(),
-  classes: ZActivitySchema.array().optional(),
+  classes: ZAppointmentSchema.array().optional(),
   assessments: ZAssessmentSchema.array().optional(),
 });

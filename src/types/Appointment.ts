@@ -1,4 +1,4 @@
-export interface Activity {
+export interface Appointment {
   name?: string | null;
   startDate: string;
   endDate: string;
@@ -7,15 +7,17 @@ export interface Activity {
   endTime: string;
 }
 
-export interface ActivityWithId extends Activity {
+export interface AppointmentWithId extends Appointment {
   id: string;
 }
 
-export interface ModelActivity {
+export interface ModelAppointment {
   createdByUserId: string;
   name?: string;
   startDateTime: Date;
   endDateTime: Date;
-  dayOfWeek: number;
+  dayOfWeek?: number;
   subjectId?: string;
+  notes?: string;
+  type?: "CLASS" | "STUDY_TIME";
 }

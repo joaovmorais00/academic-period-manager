@@ -2,7 +2,7 @@
 import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
 import EventContent from "@/components/Scheduler/EventContent/EventContent";
 import EventPopover from "@/components/Scheduler/EventPopover/EventPopover";
-import ActivityController from "@/controllers/activity-controller";
+import AppointmentController from "@/controllers/appointment-controller";
 import { EventClickArg, EventInput } from "@fullcalendar/core/index.js";
 import { EventImpl } from "@fullcalendar/core/internal.js";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
@@ -42,13 +42,13 @@ export default function page() {
   };
 
   const handleCloseCreateEventModal = (createdEvent?: boolean) => {
-    if (createdEvent) getActivities();
+    if (createdEvent) getAppointments();
     setOpenCreateEventModal(false);
     setSelectedTypeEventToCreate("");
   };
 
-  const getActivities = () => {
-    ActivityController.getAllActivitiesFromUserIdToEvents(
+  const getAppointments = () => {
+    AppointmentController.getAllAppointmentsFromUserIdToEvents(
       session.data?.user.id ?? ""
     ).then((response) => {
       setEvents(response);
@@ -56,7 +56,7 @@ export default function page() {
   };
 
   useEffect(() => {
-    if (session.data?.user.id) getActivities();
+    if (session.data?.user.id) getAppointments();
   }, [session]);
 
   return (
