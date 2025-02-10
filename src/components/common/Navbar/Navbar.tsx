@@ -7,6 +7,8 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import TopicIcon from "@mui/icons-material/Topic";
+import styles from "./styles.module.css";
+
 import {
   Divider,
   Drawer,
@@ -84,10 +86,12 @@ export default function Navbar() {
     <Drawer
       sx={{
         width: 240,
+        height: "100%",
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: 240,
           boxSizing: "border-box",
+          backgroundColor: "#242526",
         },
       }}
       variant="permanent"
@@ -98,9 +102,11 @@ export default function Navbar() {
       <List>
         {itemsMenu.map((item) => (
           <ListItem key={item.name} disablePadding>
-            <Link href={item.link ?? ""}>
+            <Link className={styles.listItem} href={item.link ?? ""}>
               <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemIcon className={styles.listItemIcon}>
+                  {item.icon}
+                </ListItemIcon>
                 <ListItemText primary={item.name} />
               </ListItemButton>
             </Link>
