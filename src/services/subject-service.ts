@@ -49,7 +49,9 @@ export async function getAllClassesByUserId(userId: string) {
   return await prismaClient.subject.findMany({
     where: { createdByUserId: userId },
     include: {
-      classesAndStudyTimes: true,
+      classesAndStudyTimes: {
+        where: { type: "CLASS" },
+      },
     },
   });
 }
@@ -61,6 +63,7 @@ export async function getSubjectById(id: string) {
     },
     include: {
       classesAndStudyTimes: true,
+      tests: true,
     },
   });
 }

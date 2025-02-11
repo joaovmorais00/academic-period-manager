@@ -1,12 +1,12 @@
 import { Appointment, AppointmentWithId } from "./Appointment";
-import { Assessment } from "./Assessment";
+import { Test } from "./Test";
 
 export interface Subject {
   title: string;
   teacher: string;
   description?: string;
   classes?: Appointment[] | AppointmentWithId[];
-  assessments?: Assessment[];
+  tests?: Test[];
 }
 
 export interface SubjectWithId extends Subject {

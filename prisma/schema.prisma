@@ -33,7 +33,7 @@ model Appointment {
   id                      String                 @id @default(uuid())
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
-  createdBy               User                   @relation(fields: [createdByUserId], references: [id])
+  createdBy               User                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId         String
   name                    String?
   startDateTime           DateTime
@@ -41,13 +41,13 @@ model Appointment {
   dayOfWeek               Int?
   notes                   String?
   type                    ActivityType           @default(CLASS)
-  Subject                 Subject?               @relation(fields: [subjectId], references: [id])
+  Subject                 Subject?               @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId               String?
   Test                    Test?                  @relation(fields: [testId], references: [id])
   testId                  String?
-  AssessmentActivity      AssessmentActivity?    @relation(fields: [assessmentActivityId], references: [id])
+  AssessmentActivity      AssessmentActivity?    @relation(fields: [assessmentActivityId], references: [id], onDelete: Cascade)
   assessmentActivityId    String?
-  ComplementaryActivity   ComplementaryActivity? @relation(fields: [complementaryActivityId], references: [id])
+  ComplementaryActivity   ComplementaryActivity? @relation(fields: [complementaryActivityId], references: [id], onDelete: Cascade)
   complementaryActivityId String?
 }
 
@@ -55,7 +55,7 @@ model Subject {
   id                   String               @id @default(uuid())
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
-  createdBy            User                 @relation(fields: [createdByUserId], references: [id])
+  createdBy            User                 @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId      String
   title                String
   teacher              String?
@@ -69,7 +69,7 @@ model Test {
   id              String        @id @default(uuid())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  createdBy       User          @relation(fields: [createdByUserId], references: [id])
+  createdBy       User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId String
   startDateTime   DateTime
   endDateTime     DateTime
@@ -78,15 +78,15 @@ model Test {
   score           Int?
   worth           Int?
   studyTimes      Appointment[]
-  Subject         Subject       @relation(fields: [subjectId], references: [id])
-  subjectId       String
+  Subject         Subject?      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId       String?
 }
 
 model AssessmentActivity {
   id              String        @id @default(uuid())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  createdBy       User          @relation(fields: [createdByUserId], references: [id])
+  createdBy       User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId String
   deadline        DateTime
   topic           String
@@ -96,7 +96,7 @@ model AssessmentActivity {
   worth           String?
   workSchedules   Appointment[]
   Meet            Meet[]
-  Subject         Subject       @relation(fields: [subjectId], references: [id])
+  Subject         Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId       String
 }
 
@@ -104,7 +104,7 @@ model ComplementaryActivity {
   id              String        @id @default(uuid())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  createdBy       User          @relation(fields: [createdByUserId], references: [id])
+  createdBy       User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId String
   type            String
   notes           String?
@@ -117,10 +117,10 @@ model Meet {
   id                       String                 @id @default(uuid())
   createdAt                DateTime               @default(now())
   updatedAt                DateTime               @updatedAt
-  createdBy                User                   @relation(fields: [createdByUserId], references: [id])
+  createdBy                User                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId          String
-  AssessmentActivity       AssessmentActivity?    @relation(fields: [assessment_ActivityId], references: [id])
-  ComplementaryActivity    ComplementaryActivity? @relation(fields: [complementary_ActivityId], references: [id])
+  AssessmentActivity       AssessmentActivity?    @relation(fields: [assessment_ActivityId], references: [id], onDelete: Cascade)
+  ComplementaryActivity    ComplementaryActivity? @relation(fields: [complementary_ActivityId], references: [id], onDelete: Cascade)
   complementary_ActivityId String?
   assessment_ActivityId    String?
   startDateTime            DateTime

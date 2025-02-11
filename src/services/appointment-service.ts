@@ -3,7 +3,7 @@
 import { prismaClient } from "@/config/prismaClient";
 import { ModelAppointment } from "@/types/Appointment";
 
-export async function createManyAppointments(appointments: ModelAppointment[]) {
+export async function createClasses(appointments: ModelAppointment[]) {
   try {
     const response = await prismaClient.appointment.createMany({
       data: appointments,

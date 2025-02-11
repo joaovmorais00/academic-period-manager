@@ -139,6 +139,85 @@ export default function ShowMoreSubjectsDialog({
                 </Grid>
               </Grid>
             )}
+
+            {subject.tests && subject.tests.length > 0 && (
+              <Grid item container>
+                <Grid>
+                  <Typography variant="h6">Provas:</Typography>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  sx={{ marginTop: "0.1rem" }}
+                  rowSpacing={1}
+                >
+                  {subject.tests.map((test) => (
+                    <Grid item container xs={12}>
+                      <Grid
+                        item
+                        xs={3}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Typography variant="subtitle1">Data:</Typography>
+                        &nbsp; {`${test.date}`}
+                      </Grid>{" "}
+                      <Grid
+                        item
+                        xs={3}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Typography variant="subtitle1">Horário:</Typography>
+                        &nbsp;{` ${test.startTime} à ${test.endTime}`}
+                      </Grid>{" "}
+                      {test.worth && (
+                        <Grid
+                          item
+                          xs={3}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Typography variant="subtitle1">
+                            Valor da prova:
+                          </Typography>
+                          &nbsp;{` ${test.worth}`}
+                        </Grid>
+                      )}
+                      {test.score && (
+                        <Grid
+                          item
+                          xs={3}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Typography variant="subtitle1">Nota: </Typography>
+                          &nbsp;{` ${test.score}`}
+                        </Grid>
+                      )}
+                      <Grid
+                        item
+                        xs={12}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Typography variant="subtitle1">Assunto: </Typography>
+                        &nbsp;{` ${test.topic}`}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Typography variant="subtitle1">Anotações:</Typography>
+                        &nbsp; {` ${test.notes}`}
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            )}
           </Grid>
         )}
       </DialogContent>

@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { EventInput } from "@fullcalendar/core/index.js";
 import DaysOfWeek from "@/utils/DaysOfWeek";
 import Dates from "@/utils/Dates";
+import TestController from "./test-controller";
+import { AppointmentWithId } from "@/types/Appointment";
 
 async function create(subject: Subject, userId: string) {
   try {
@@ -21,23 +23,53 @@ async function create(subject: Subject, userId: string) {
       userId,
       createdSubject.id
     );
+    await TestController.createManyTests(
+      subject.tests ?? [],
+      userId,
+      createdSubject.id
+    );
+
     return true;
   } catch (error) {
+    console.log(error, "create disciplina");
     throw error;
   }
 }
 
 async function get(id: string) {
   const response = await getSubjectById(id);
-  const classes = response?.classesAndStudyTimes.map(
-    ({ id, name, startDateTime, endDateTime, dayOfWeek }) => ({
+  const classes = response?.classesAndStudyTimes.reduce(
+    (
+      acc: AppointmentWithId[],
+      { id, name, startDateTime, endDateTime, dayOfWeek, type }
+    ) => {
+      if (type === "CLASS") {
+        acc.push({
+          id,
+          name,
+          daysOfWeek: dayOfWeek
+            ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)]
+            : [],
+          startDate: Dates.DateTimeToStringDate(startDateTime),
+          endDate: Dates.DateTimeToStringDate(endDateTime),
+          startTime: Dates.DateTimeToStringTime(startDateTime),
+          endTime: Dates.DateTimeToStringTime(endDateTime),
+        });
+      }
+      return acc;
+    },
+    []
+  );
+  const tests = response?.tests.map(
+    ({ id, topic, notes, startDateTime, endDateTime, score, worth }) => ({
       id,
-      name,
-      daysOfWeek: dayOfWeek ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)] : [],
-      startDate: Dates.DateTimeToStringDate(startDateTime),
-      endDate: Dates.DateTimeToStringDate(endDateTime),
+      topic: topic ?? "",
+      notes: notes ?? "",
+      date: Dates.DateTimeToStringDate(startDateTime),
       startTime: Dates.DateTimeToStringTime(startDateTime),
       endTime: Dates.DateTimeToStringTime(endDateTime),
+      score: score?.toString(),
+      worth: worth?.toString(),
     })
   );
   const subject = {
@@ -46,6 +78,7 @@ async function get(id: string) {
     teacher: !response?.teacher ? "" : response.teacher,
     description: !response?.description ? "" : response.description,
     classes,
+    tests,
   };
   return subject;
 }
@@ -75,8 +108,14 @@ async function update(
   await updateSubject(subject, userId);
   if (updateClasses) {
     await AppointmentController.deleteAllSubjectAppointments(subject.id);
+    await TestController.deleteAllSubjectTests(subject.id);
     await AppointmentController.createManyClasses(
       subject.classes ?? [],
+      userId,
+      subject.id
+    );
+    await TestController.createManyTests(
+      subject.tests ?? [],
       userId,
       subject.id
     );
