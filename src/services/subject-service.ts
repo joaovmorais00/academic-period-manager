@@ -45,13 +45,12 @@ export async function deleteSubject(id: string) {
   return await prismaClient.subject.delete({ where: { id } });
 }
 
-export async function getAllClassesByUserId(userId: string) {
+export async function getAllSubjectsEventsByUserId(userId: string) {
   return await prismaClient.subject.findMany({
     where: { createdByUserId: userId },
     include: {
-      classesAndStudyTimes: {
-        where: { type: "CLASS" },
-      },
+      classesAndStudyTimes: true,
+      tests: true,
     },
   });
 }

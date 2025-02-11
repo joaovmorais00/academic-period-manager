@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import CreateEventButton from "@/components/Scheduler/CreateEvent/CreateEventButton/CreateEventButton";
 import CreateEventModal from "@/components/Scheduler/CreateEvent/CreateEventModal/CreateEventModal";
+import SubjectController from "@/controllers/subject-controller";
 
 export default function page() {
   const session = useSession();
@@ -42,21 +43,21 @@ export default function page() {
   };
 
   const handleCloseCreateEventModal = (createdEvent?: boolean) => {
-    if (createdEvent) getAppointments();
+    if (createdEvent) getEvents();
     setOpenCreateEventModal(false);
     setSelectedTypeEventToCreate("");
   };
 
-  const getAppointments = () => {
-    AppointmentController.getAllAppointmentsFromUserIdToEvents(
-      session.data?.user.id ?? ""
-    ).then((response) => {
-      setEvents(response);
-    });
+  const getEvents = () => {
+    SubjectController.getAllEventsByUserId(session.data?.user.id ?? "").then(
+      (response) => {
+        setEvents(response);
+      }
+    );
   };
 
   useEffect(() => {
-    if (session.data?.user.id) getAppointments();
+    if (session.data?.user.id) getEvents();
   }, [session]);
 
   return (

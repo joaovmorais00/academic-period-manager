@@ -2,6 +2,8 @@ import { EventImpl } from "@fullcalendar/core/internal.js";
 import { Popover, Typography } from "@mui/material";
 import styles from "./styles.module.css";
 import dayjs from "dayjs";
+import ClassPopoverContent from "./ClassPopoverContent/ClassPopoverContent";
+import TestPopoverContent from "./TestPopoverContent/TestPopoverContent";
 require("dayjs/locale/pt-br");
 
 interface Props {
@@ -12,6 +14,19 @@ interface Props {
 dayjs.locale("pt-br");
 
 export default function EventPopover({ event, onClose, anchorEl }: Props) {
+  const getComponent = (eventType: string) => {
+    switch (eventType) {
+      case "class":
+        return <ClassPopoverContent event={event} />;
+
+      case "test":
+        return <TestPopoverContent event={event} />;
+      default:
+        <></>;
+        break;
+    }
+  };
+
   return (
     <Popover
       open={!!anchorEl}
@@ -23,20 +38,7 @@ export default function EventPopover({ event, onClose, anchorEl }: Props) {
       }}
     >
       <div className={styles.eventPopover}>
-        <Typography variant="h5">{event?.title}</Typography>
-        <Typography>{`${dayjs(event?.start)
-          .locale("pt-br")
-          .format("dddd, D [de] MMMM, HH:mm")} - ${dayjs(event?.end).format(
-          "HH:mm"
-        )}`}</Typography>
-        <Typography>
-          Professor: {event?.extendedProps.infos?.teacher}
-        </Typography>
-        {event?.extendedProps.infos?.description && (
-          <Typography>
-            Descrição: {event?.extendedProps.infos?.description}
-          </Typography>
-        )}
+        {getComponent(event?.extendedProps.infos?.eventType)}
       </div>
     </Popover>
   );
