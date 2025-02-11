@@ -21,3 +21,8 @@ export interface ModelAppointment {
   notes?: string;
   type?: "CLASS" | "STUDY_TIME";
 }
+
+export interface SchedulerClasses {
+  subjectId: string;
+  classes: Appointment[];
+}

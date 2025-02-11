@@ -8,3 +8,8 @@ export const ZAppointmentSchema = z.object({
   startTime: z.string(),
   endTime: z.string(),
 });
+
+export const ZSchedulerClassSchema = z.object({
+  subjectId: z.string(),
+  classes: ZAppointmentSchema.array().optional(),
+});

@@ -31,7 +31,6 @@ async function create(subject: Subject, userId: string) {
 
     return true;
   } catch (error) {
-    console.log(error, "create disciplina");
     throw error;
   }
 }
