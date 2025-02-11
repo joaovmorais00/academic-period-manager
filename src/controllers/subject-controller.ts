@@ -6,15 +6,14 @@ import {
   getSubjectById,
   updateSubject,
 } from "@/services/subject-service";
-import { Subject, SubjectWithId, TableSubject } from "@/types/Subject";
-import AppointmentController from "./appointment-controller";
-import dayjs from "dayjs";
-import { EventInput } from "@fullcalendar/core/index.js";
-import DaysOfWeek from "@/utils/DaysOfWeek";
-import Dates from "@/utils/Dates";
-import TestController from "./test-controller";
 import { AppointmentWithId } from "@/types/Appointment";
-import { link } from "fs";
+import { Subject, SubjectWithId, TableSubject } from "@/types/Subject";
+import Dates from "@/utils/Dates";
+import DaysOfWeek from "@/utils/DaysOfWeek";
+import { EventInput } from "@fullcalendar/core/index.js";
+import dayjs from "dayjs";
+import AppointmentController from "./appointment-controller";
+import TestController from "./test-controller";
 
 async function create(subject: Subject, userId: string) {
   try {
@@ -121,7 +120,7 @@ async function update(
 ) {
   await updateSubject(subject, userId);
   if (updateClasses) {
-    await AppointmentController.deleteAllSubjectAppointments(subject.id);
+    await AppointmentController.deleteAllClasses(subject.id);
 
     await AppointmentController.createManyClasses(
       subject.classes ?? [],
@@ -165,16 +164,18 @@ async function getAllEventsByUserId(userId: string) {
       while (dayAux.isAfter(endDate, "day") === false) {
         if (dayAux.day() === appointment.dayOfWeek) {
           events.push({
-            title: `Aula de ${subject.title}`,
+            title: `${appointment.type === "CLASS" ? "Aula de " : "Estudar"} ${
+              subject.title
+            }`,
             start: dayAux.toDate(),
             end: dayjs(dayAux)
               .set("hour", endDate.hour())
               .set("minute", endDate.minute())
               .toDate(),
-            backgroundColor: "green",
+            backgroundColor: appointment.type === "CLASS" ? "green" : "gray",
             textColor: "white",
             infos: {
-              eventType: "class",
+              eventType: appointment.type,
               teacher: subject.teacher,
               description: subject.description,
             },

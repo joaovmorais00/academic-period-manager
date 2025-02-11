@@ -18,6 +18,7 @@ export interface ModelAppointment {
   endDateTime: Date;
   dayOfWeek?: number;
   subjectId?: string;
+  testId?: string;
   notes?: string;
   type?: "CLASS" | "STUDY_TIME";
 }

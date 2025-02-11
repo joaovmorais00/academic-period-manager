@@ -3,7 +3,7 @@
 import { prismaClient } from "@/config/prismaClient";
 import { ModelAppointment } from "@/types/Appointment";
 
-export async function createClasses(appointments: ModelAppointment[]) {
+export async function createAppointments(appointments: ModelAppointment[]) {
   try {
     const response = await prismaClient.appointment.createMany({
       data: appointments,
@@ -29,6 +29,16 @@ export async function deleteAllSubjectClasses(subjectId: string) {
   return await prismaClient.appointment.deleteMany({
     where: {
       subjectId,
+      type: "CLASS",
+    },
+  });
+}
+
+export async function deleteAllSubjectStudyTimes(subjectId: string) {
+  return await prismaClient.appointment.deleteMany({
+    where: {
+      subjectId,
+      type: "STUDY_TIME",
     },
   });
 }

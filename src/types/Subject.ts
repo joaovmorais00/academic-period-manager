@@ -6,6 +6,7 @@ export interface Subject {
   teacher: string;
   description?: string;
   classes?: Appointment[] | AppointmentWithId[];
+  studyTimes?: Appointment[] | AppointmentWithId[];
   tests?: Test[];
 }
 

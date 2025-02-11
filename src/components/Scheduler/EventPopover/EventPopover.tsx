@@ -2,7 +2,7 @@ import { EventImpl } from "@fullcalendar/core/internal.js";
 import { Popover, Typography } from "@mui/material";
 import styles from "./styles.module.css";
 import dayjs from "dayjs";
-import ClassPopoverContent from "./ClassPopoverContent/ClassPopoverContent";
+import ClassPopoverContent from "./SubjectEventPopoverContent/SubjectEventPopoverContent";
 import TestPopoverContent from "./TestPopoverContent/TestPopoverContent";
 require("dayjs/locale/pt-br");
 
@@ -15,11 +15,13 @@ dayjs.locale("pt-br");
 
 export default function EventPopover({ event, onClose, anchorEl }: Props) {
   const getComponent = (eventType: string) => {
+    console.log(eventType, "teste tipo");
     switch (eventType) {
-      case "class":
+      case "CLASS":
+      case "STUDY_TIME":
         return <ClassPopoverContent event={event} />;
 
-      case "test":
+      case "TEST":
         return <TestPopoverContent event={event} />;
       default:
         <></>;
