@@ -40,7 +40,7 @@ interface ClassFormProps {
   successfulCreateEvent?: () => void;
 }
 
-export default function ClassForm({
+export default function SchedulerClassForm({
   successfulCreateEvent = () => {},
 }: ClassFormProps) {
   const [loading, setLoading] = useState<boolean>(false);

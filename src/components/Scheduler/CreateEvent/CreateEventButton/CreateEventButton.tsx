@@ -49,7 +49,10 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
         >
           Aula
         </MenuItem>
-        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
+        <MenuItem
+          sx={{ minWidth: " 10rem" }}
+          onClick={() => handleClickTypeEvent("test")}
+        >
           Prova
         </MenuItem>
         <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>

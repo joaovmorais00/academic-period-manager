@@ -59,8 +59,9 @@ async function deleteAllSubjectAppointments(subjectId: string) {
 }
 
 async function getAllAppointmentsFromUserIdToEvents(userId: string) {
-  const classes: EventInput[] =
-    await SubjectController.getAllClassesByUserIdToEvents(userId);
+  const classes: EventInput[] = await SubjectController.getAllEventsByUserId(
+    userId
+  );
 
   const events: EventInput[] = [...classes];
 

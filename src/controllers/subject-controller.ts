@@ -1,8 +1,8 @@
 import {
   createSubject,
   deleteSubject,
-  getAllClassesByUserId,
   getAllSubjectsByUserId,
+  getAllSubjectsEventsByUserId,
   getSubjectById,
   updateSubject,
 } from "@/services/subject-service";
@@ -123,21 +123,21 @@ async function update(
   return true;
 }
 
-async function getAllClassesByUserIdToEvents(userId: string) {
+async function getAllEventsByUserId(userId: string) {
   const events: EventInput[] = [];
-  const subjects = await getAllClassesByUserId(userId);
-  subjects.map((subject) =>
+  const subjects = await getAllSubjectsEventsByUserId(userId);
+  subjects.map((subject) => {
     subject.classesAndStudyTimes.map((appointment) => {
       let dayAux = dayjs(appointment.startDateTime);
       const endDate = dayjs(appointment.endDateTime);
       while (dayAux.isAfter(endDate, "day") === false) {
         if (dayAux.day() === appointment.dayOfWeek) {
           events.push({
-            title: subject.title,
+            title: `Aula de ${subject.title}`,
             start: dayAux.toDate(),
             end: dayjs(dayAux)
               .set("hour", endDate.hour())
-              .set("minute", 30)
+              .set("minute", endDate.minute())
               .toDate(),
             backgroundColor: "green",
             textColor: "white",
@@ -150,8 +150,25 @@ async function getAllClassesByUserIdToEvents(userId: string) {
         }
         dayAux = dayAux.add(1, "day");
       }
-    })
-  );
+    });
+    subject.tests.map((test) => {
+      events.push({
+        title: `Prova de ${subject.title}`,
+        start: dayjs(test.startDateTime).toDate(),
+        end: dayjs(test.endDateTime).toDate(),
+        backgroundColor: "blue",
+        textColor: "white",
+        infos: {
+          eventType: "test",
+          teacher: subject.teacher,
+          topic: test.topic,
+          notes: test.notes,
+          score: test.score,
+          worth: test.worth,
+        },
+      });
+    });
+  });
   return events;
 }
 
@@ -161,7 +178,7 @@ const SubjectController = {
   getAllByUserId,
   remove,
   update,
-  getAllClassesByUserIdToEvents,
+  getAllEventsByUserId,
 };
 
 export default SubjectController;
