@@ -14,3 +14,7 @@ export async function createTests(tests: ModelTest[]) {
     throw error;
   }
 }
+
+export async function deleteAllTestsBySubjectId(subjectId: string) {
+  return await prismaClient.test.deleteMany({ where: { subjectId } });
+}

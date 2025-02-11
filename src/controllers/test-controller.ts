@@ -1,9 +1,16 @@
 import { createDateInDefaultTimezone } from "@/config/dayjs";
-import { createTests } from "@/services/test-service";
+import {
+  createTests,
+  deleteAllTestsBySubjectId,
+} from "@/services/test-service";
 import { ModelTest, Test } from "@/types/Test";
 import Dates from "@/utils/Dates";
 
-async function create(tests: Test[], userId: string, subjectId: string) {
+async function createManyTests(
+  tests: Test[],
+  userId: string,
+  subjectId: string
+) {
   try {
     let modelTests: ModelTest[] = tests.map((test) => ({
       createdByUserId: userId,
@@ -25,8 +32,13 @@ async function create(tests: Test[], userId: string, subjectId: string) {
   }
 }
 
+async function deleteAllSubjectTests(subjectId: string) {
+  return await deleteAllTestsBySubjectId(subjectId);
+}
+
 const TestController = {
-  create,
+  createManyTests,
+  deleteAllSubjectTests,
 };
 
 export default TestController;

@@ -63,6 +63,7 @@ export async function getSubjectById(id: string) {
     },
     include: {
       classesAndStudyTimes: true,
+      tests: true,
     },
   });
 }
