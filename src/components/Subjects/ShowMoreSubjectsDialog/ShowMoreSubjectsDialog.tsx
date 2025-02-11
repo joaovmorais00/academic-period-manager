@@ -32,6 +32,21 @@ export default function ShowMoreSubjectsDialog({
     SubjectController.get(subjectId).then((response) => setSubject(response));
   }, [subjectId]);
 
+  const getTypeTestTitle = (keyTypeTest: string) => {
+    switch (keyTypeTest) {
+      case "TEST":
+        return "Prova";
+      case "SEMINAR":
+        return "Seminário";
+      case "ARTICLE":
+        return "Artigo";
+      case "EXERCISE":
+        return "Lista de exercícios";
+      default:
+        return "Outro";
+    }
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
       <DialogTitle>
@@ -141,15 +156,15 @@ export default function ShowMoreSubjectsDialog({
             )}
 
             {subject.tests && subject.tests.length > 0 && (
-              <Grid item container>
+              <Grid item container sx={{ marginTop: "1rem" }}>
                 <Grid>
-                  <Typography variant="h6">Provas:</Typography>
+                  <Typography variant="h5">Atividades avaliativas:</Typography>
                 </Grid>
                 <Grid
                   item
                   container
                   sx={{ marginTop: "0.1rem" }}
-                  rowSpacing={1}
+                  rowSpacing={4}
                 >
                   {subject.tests.map((test) => (
                     <Grid item container xs={12}>
@@ -159,12 +174,23 @@ export default function ShowMoreSubjectsDialog({
                         columnSpacing={1}
                         className={styles.classRow}
                       >
+                        <Typography variant="subtitle1">
+                          Tipo avaliação:
+                        </Typography>
+                        &nbsp;{getTypeTestTitle(test.typeTest)}
+                      </Grid>{" "}
+                      <Grid
+                        item
+                        xs={2}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
                         <Typography variant="subtitle1">Data:</Typography>
                         &nbsp; {`${test.date}`}
                       </Grid>{" "}
                       <Grid
                         item
-                        xs={3}
+                        xs={2}
                         columnSpacing={1}
                         className={styles.classRow}
                       >
@@ -174,7 +200,7 @@ export default function ShowMoreSubjectsDialog({
                       {test.worth && (
                         <Grid
                           item
-                          xs={3}
+                          xs={2}
                           columnSpacing={1}
                           className={styles.classRow}
                         >
@@ -187,7 +213,7 @@ export default function ShowMoreSubjectsDialog({
                       {test.score && (
                         <Grid
                           item
-                          xs={3}
+                          xs={2}
                           columnSpacing={1}
                           className={styles.classRow}
                         >
@@ -195,24 +221,41 @@ export default function ShowMoreSubjectsDialog({
                           &nbsp;{` ${test.score}`}
                         </Grid>
                       )}
-                      <Grid
-                        item
-                        xs={12}
-                        columnSpacing={1}
-                        className={styles.classRow}
-                      >
-                        <Typography variant="subtitle1">Assunto: </Typography>
-                        &nbsp;{` ${test.topic}`}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        columnSpacing={1}
-                        className={styles.classRow}
-                      >
-                        <Typography variant="subtitle1">Anotações:</Typography>
-                        &nbsp; {` ${test.notes}`}
-                      </Grid>
+                      {test.topic && (
+                        <Grid
+                          item
+                          xs={12}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Typography variant="subtitle1">Assunto: </Typography>
+                          &nbsp;{` ${test.topic}`}
+                        </Grid>
+                      )}
+                      {test.notes && (
+                        <Grid
+                          item
+                          xs={12}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Typography variant="subtitle1">
+                            Anotações:
+                          </Typography>
+                          &nbsp; {` ${test.notes}`}
+                        </Grid>
+                      )}
+                      {test.link && (
+                        <Grid
+                          item
+                          xs={12}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Typography variant="subtitle1">Link:</Typography>
+                          &nbsp; {` ${test.link}`}
+                        </Grid>
+                      )}
                     </Grid>
                   ))}
                 </Grid>

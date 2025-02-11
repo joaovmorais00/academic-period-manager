@@ -53,9 +53,6 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
           sx={{ minWidth: " 10rem" }}
           onClick={() => handleClickTypeEvent("test")}
         >
-          Prova
-        </MenuItem>
-        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
           Atividade Avaliativa
         </MenuItem>
         <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>

@@ -2,7 +2,6 @@ import { EventContentArg } from "@fullcalendar/core/index.js";
 import ClassIcon from "@mui/icons-material/Class";
 import dayjs from "dayjs";
 import styles from "./styles.module.css";
-import { useEffect } from "react";
 
 export default function EventContent(eventInfo: EventContentArg) {
   const eventIcon = (typeEvent: string) => {

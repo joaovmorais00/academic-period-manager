@@ -8,6 +8,8 @@ export const ZTestSchema = z.object({
   endTime: z.string(),
   worth: z.string().optional(),
   score: z.string().optional(),
+  link: z.string().optional(),
+  typeTest: z.string(),
 });
 
 export const ZSchedulerTestSchema = z.object({

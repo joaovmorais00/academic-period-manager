@@ -2,8 +2,7 @@
 import SubjectController from "@/controllers/subject-controller";
 import styles from "./styles.module.css";
 
-import AppointmentController from "@/controllers/appointment-controller";
-
+import TestController from "@/controllers/test-controller";
 import { TableSubject } from "@/types/Subject";
 import { SchedulerTests } from "@/types/Test";
 import { ZSchedulerTestSchema } from "@/utils/zod/test-schema";
@@ -13,12 +12,10 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Checkbox,
   FormControl,
   Grid,
   IconButton,
   InputLabel,
-  ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
@@ -36,7 +33,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "react-toastify";
-import TestController from "@/controllers/test-controller";
 
 interface ClassFormProps {
   successfulCreateEvent?: () => void;
@@ -47,17 +43,29 @@ export default function TestForm({
 }: ClassFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const session = useSession();
-  const router = useRouter();
   const [subjects, setSubjects] = useState<TableSubject[]>([]);
 
-  const daysOfWeek = [
-    "Domingo",
-    "Segunda-feira",
-    "Terça-feira",
-    "Quarta-feira",
-    "Quinta-feira",
-    "Sexta-feira",
-    "Sábado",
+  const typeTests = [
+    {
+      key: "TEST",
+      name: "Prova",
+    },
+    {
+      key: "SEMINAR",
+      name: "Seminário",
+    },
+    {
+      key: "ARTICLE",
+      name: "Artigo",
+    },
+    {
+      key: "EXERCISE",
+      name: "Lista de exercícios",
+    },
+    {
+      key: "OTHER",
+      name: "Outro",
+    },
   ];
 
   useEffect(() => {
@@ -80,7 +88,6 @@ export default function TestForm({
     control,
     reset,
     formState: { errors },
-    getFieldState,
   } = useForm<SchedulerTests>({
     resolver: zodResolver(ZSchedulerTestSchema),
     defaultValues: {
@@ -93,6 +100,8 @@ export default function TestForm({
           endTime: "",
           score: "",
           worth: "",
+          link: "",
+          typeTest: "",
         },
       ],
       subjectId: "",
@@ -168,14 +177,7 @@ export default function TestForm({
           </Grid>
           <Grid item container xs={11} rowSpacing={3}>
             {testsDates.map((field, index) => (
-              <Grid
-                item
-                container
-                key={field.id}
-                xs={12}
-                columnSpacing={1}
-                rowSpacing={1}
-              >
+              <Grid item container key={field.id} xs={12} columnSpacing={1}>
                 {testsDates.length > 1 && (
                   <Grid item xs={1}>
                     <IconButton
@@ -192,33 +194,35 @@ export default function TestForm({
                   item
                   container
                   xs={testsDates.length > 1 ? 11 : 12}
-                  rowSpacing={2}
                   columnSpacing={1}
+                  rowSpacing={1}
                 >
-                  <Grid item xs={6}>
-                    <TextField
-                      multiline
-                      InputLabelProps={{ shrink: true }}
-                      fullWidth
-                      id={`tests.${index}.topic`}
-                      label="Assunto"
-                      error={!!errors.tests?.[index]?.topic}
-                      helperText={errors.tests?.[index]?.topic?.message}
-                      {...register(`tests.${index}.topic`)}
+                  <Grid item xs={2}>
+                    <Controller
+                      name={`tests.${index}.typeTest`}
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl fullWidth>
+                          <InputLabel id="typeTest">
+                            Tipo da atividade
+                          </InputLabel>
+                          <Select
+                            {...field}
+                            labelId="typeTest"
+                            label="typeTest"
+                            input={<OutlinedInput label="Tipo da atividade" />}
+                          >
+                            {typeTests.map(({ key, name }) => (
+                              <MenuItem value={key} key={key}>
+                                {name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      multiline
-                      InputLabelProps={{ shrink: true }}
-                      fullWidth
-                      id={`tests.${index}.notes`}
-                      label="Anotações"
-                      error={!!errors.tests?.[index]?.notes}
-                      helperText={errors.tests?.[index]?.notes?.message}
-                      {...register(`tests.${index}.notes`)}
-                    />
-                  </Grid>
+
                   <Grid item xs={2}>
                     <TextField
                       type="date"
@@ -280,6 +284,41 @@ export default function TestForm({
                       {...register(`tests.${index}.score`)}
                     />
                   </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      multiline
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      id={`tests.${index}.topic`}
+                      label="Assunto"
+                      error={!!errors.tests?.[index]?.topic}
+                      helperText={errors.tests?.[index]?.topic?.message}
+                      {...register(`tests.${index}.topic`)}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      multiline
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      id={`tests.${index}.notes`}
+                      label="Anotações"
+                      error={!!errors.tests?.[index]?.notes}
+                      helperText={errors.tests?.[index]?.notes?.message}
+                      {...register(`tests.${index}.notes`)}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      id={`tests.${index}.link`}
+                      label="Link"
+                      error={!!errors.tests?.[index]?.link}
+                      helperText={errors.tests?.[index]?.link?.message}
+                      {...register(`tests.${index}.link`)}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             ))}
@@ -298,6 +337,8 @@ export default function TestForm({
                   endTime: "",
                   score: "",
                   worth: "",
+                  link: "",
+                  typeTest: "",
                 })
               }
             >
