@@ -24,7 +24,6 @@ model User {
   Appointments            Appointment[]
   Subjects                Subject[]
   Tests                   Test[]
-  AssessmentActivities    AssessmentActivity[]
   Meet                    Meet[]
   ComplementaryActivities ComplementaryActivity[]
 }
@@ -45,24 +44,21 @@ model Appointment {
   subjectId               String?
   Test                    Test?                  @relation(fields: [testId], references: [id])
   testId                  String?
-  AssessmentActivity      AssessmentActivity?    @relation(fields: [assessmentActivityId], references: [id], onDelete: Cascade)
-  assessmentActivityId    String?
   ComplementaryActivity   ComplementaryActivity? @relation(fields: [complementaryActivityId], references: [id], onDelete: Cascade)
   complementaryActivityId String?
 }
 
 model Subject {
-  id                   String               @id @default(uuid())
-  createdAt            DateTime             @default(now())
-  updatedAt            DateTime             @updatedAt
-  createdBy            User                 @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  id                   String        @id @default(uuid())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  createdBy            User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId      String
   title                String
   teacher              String?
   description          String?
   classesAndStudyTimes Appointment[]
   tests                Test[]
-  assessmentActivities AssessmentActivity[]
 }
 
 model Test {
@@ -77,27 +73,12 @@ model Test {
   notes           String?
   score           Int?
   worth           Int?
+  link            String?
+  type            String        @default("TEST")
+  Meet            Meet[]
   studyTimes      Appointment[]
   Subject         Subject?      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId       String?
-}
-
-model AssessmentActivity {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  createdBy       User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByUserId String
-  deadline        DateTime
-  topic           String
-  notes           String?
-  link            String?
-  score           String?
-  worth           String?
-  workSchedules   Appointment[]
-  Meet            Meet[]
-  Subject         Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  subjectId       String
 }
 
 model ComplementaryActivity {
@@ -119,13 +100,13 @@ model Meet {
   updatedAt                DateTime               @updatedAt
   createdBy                User                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId          String
-  AssessmentActivity       AssessmentActivity?    @relation(fields: [assessment_ActivityId], references: [id], onDelete: Cascade)
   ComplementaryActivity    ComplementaryActivity? @relation(fields: [complementary_ActivityId], references: [id], onDelete: Cascade)
   complementary_ActivityId String?
-  assessment_ActivityId    String?
   startDateTime            DateTime
   endDateTime              DateTime
   notes                    String?
+  Test                     Test?                  @relation(fields: [testId], references: [id])
+  testId                   String?
 }
 
 enum ActivityType {

@@ -6,6 +6,8 @@ export interface Test {
   notes?: string;
   score?: string;
   worth?: string;
+  link?: string;
+  typeTest: string;
 }
 
 export interface TesttWithId extends Test {
@@ -21,6 +23,8 @@ export interface ModelTest {
   topic?: string;
   score?: number;
   worth?: number;
+  link?: string;
+  type: string;
 }
 
 export interface SchedulerTests {

@@ -14,6 +14,7 @@ import DaysOfWeek from "@/utils/DaysOfWeek";
 import Dates from "@/utils/Dates";
 import TestController from "./test-controller";
 import { AppointmentWithId } from "@/types/Appointment";
+import { link } from "fs";
 
 async function create(subject: Subject, userId: string) {
   try {
@@ -61,7 +62,17 @@ async function get(id: string) {
     []
   );
   const tests = response?.tests.map(
-    ({ id, topic, notes, startDateTime, endDateTime, score, worth }) => ({
+    ({
+      id,
+      topic,
+      notes,
+      startDateTime,
+      endDateTime,
+      score,
+      worth,
+      link,
+      type,
+    }) => ({
       id,
       topic: topic ?? "",
       notes: notes ?? "",
@@ -70,6 +81,8 @@ async function get(id: string) {
       endTime: Dates.DateTimeToStringTime(endDateTime),
       score: score?.toString(),
       worth: worth?.toString(),
+      link: link ?? "",
+      typeTest: type ?? "test",
     })
   );
   const subject = {
@@ -103,17 +116,21 @@ async function remove(id: string) {
 async function update(
   subject: SubjectWithId,
   userId: string,
-  updateClasses: boolean
+  updateClasses: boolean,
+  updateTests: boolean
 ) {
   await updateSubject(subject, userId);
   if (updateClasses) {
     await AppointmentController.deleteAllSubjectAppointments(subject.id);
-    await TestController.deleteAllSubjectTests(subject.id);
+
     await AppointmentController.createManyClasses(
       subject.classes ?? [],
       userId,
       subject.id
     );
+  }
+  if (updateTests) {
+    await TestController.deleteAllSubjectTests(subject.id);
     await TestController.createManyTests(
       subject.tests ?? [],
       userId,
@@ -122,6 +139,21 @@ async function update(
   }
   return true;
 }
+
+const getTypeTestTitle = (keyTypeTest: string) => {
+  switch (keyTypeTest) {
+    case "TEST":
+      return "Prova";
+    case "SEMINAR":
+      return "Seminário";
+    case "ARTICLE":
+      return "Artigo";
+    case "EXERCISE":
+      return "Lista de exercícios";
+    default:
+      return "Outro";
+  }
+};
 
 async function getAllEventsByUserId(userId: string) {
   const events: EventInput[] = [];
@@ -153,7 +185,7 @@ async function getAllEventsByUserId(userId: string) {
     });
     subject.tests.map((test) => {
       events.push({
-        title: `Prova de ${subject.title}`,
+        title: `${getTypeTestTitle(test.type)} de ${subject.title}`,
         start: dayjs(test.startDateTime).toDate(),
         end: dayjs(test.endDateTime).toDate(),
         backgroundColor: "blue",

@@ -23,6 +23,9 @@ export default function TestPopoverContent({ event }: Props) {
       {event?.extendedProps.infos?.notes && (
         <Typography>Anotações: {event?.extendedProps.infos?.notes}</Typography>
       )}
+      {event?.extendedProps.infos?.link && (
+        <Typography>Link: {event?.extendedProps.infos?.link}</Typography>
+      )}
       {event?.extendedProps.infos?.worth && (
         <Typography>
           Valor: {event?.extendedProps.infos?.worth} pontos
