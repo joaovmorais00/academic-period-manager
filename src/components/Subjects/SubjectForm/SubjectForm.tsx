@@ -50,14 +50,6 @@ export default function SubjectForm({
   const session = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (id !== "") {
-      SubjectController.get(id).then((response) => {
-        reset(response);
-      });
-    }
-  }, [id]);
-
   const daysOfWeek = [
     "Domingo",
     "Segunda-feira",
@@ -90,6 +82,14 @@ export default function SubjectForm({
       name: "Outro",
     },
   ];
+
+  useEffect(() => {
+    if (id !== "") {
+      SubjectController.get(id).then((response) => {
+        reset(response);
+      });
+    }
+  }, [id]);
 
   const {
     register,
@@ -126,6 +126,15 @@ export default function SubjectForm({
           typeTest: "",
         },
       ],
+      studyTimes: [
+        {
+          daysOfWeek: [],
+          startDate: "",
+          endDate: "",
+          startTime: "",
+          endTime: "",
+        },
+      ],
     },
   });
 
@@ -147,10 +156,18 @@ export default function SubjectForm({
     name: "tests",
   });
 
+  const {
+    fields: studyTimesDates,
+    append: appendStudyTimes,
+    remove: removeStudyTimes,
+  } = useFieldArray({
+    control,
+    name: "studyTimes",
+  });
+
   const onSubmit: SubmitHandler<Subject> = (data) => {
     setLoading(true);
     const subject: Subject = { ...data };
-    console.log("isso que ta indo subject", subject);
     if (!id) {
       SubjectController.create(subject, session.data?.user?.id ?? "")
         .then((response) => {
@@ -168,7 +185,8 @@ export default function SubjectForm({
         { id, ...subject },
         session.data?.user?.id ?? "",
         getFieldState("classes").isDirty,
-        getFieldState("tests").isDirty
+        getFieldState("tests").isDirty,
+        getFieldState("studyTimes").isDirty
       )
         .then((response) => {
           toast.success("Disciplina atualizada com sucesso");
@@ -524,6 +542,132 @@ export default function SubjectForm({
                   worth: "",
                   link: "",
                   typeTest: "",
+                })
+              }
+            >
+              <AddIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Grid item container xs={12} rowSpacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6" className="mb-3">
+              {!id ? "Cadastro de " : ""}Horários de estudo
+            </Typography>
+          </Grid>
+          <Grid item container xs={11} rowSpacing={3}>
+            {studyTimesDates.map((field, index) => (
+              <Grid
+                item
+                container
+                key={field.id}
+                xs={12}
+                columnSpacing={1}
+                rowSpacing={1}
+              >
+                {studyTimesDates.length > 1 && (
+                  <Grid item xs={1}>
+                    <IconButton
+                      color="error"
+                      aria-label="add"
+                      size="large"
+                      onClick={() => removeStudyTimes(index)}
+                    >
+                      <RemoveIcon fontSize="large" />
+                    </IconButton>
+                  </Grid>
+                )}
+                <Grid item xs={2}>
+                  <TextField
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    id={`studyTimes.${index}.startDate`}
+                    label="Data de início"
+                    error={!!errors.studyTimes?.[index]?.startDate}
+                    helperText={errors.studyTimes?.[index]?.startDate?.message}
+                    {...register(`studyTimes.${index}.startDate`)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    id={`studyTimes.${index}.endDate`}
+                    label="Data de término"
+                    error={!!errors.studyTimes?.[index]?.endDate}
+                    helperText={errors.studyTimes?.[index]?.endDate?.message}
+                    {...register(`studyTimes.${index}.endDate`)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    type="time"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    id={`studyTimes.${index}.startTime`}
+                    label="Horário de início"
+                    error={!!errors.studyTimes?.[index]?.startTime}
+                    helperText={errors.studyTimes?.[index]?.startTime?.message}
+                    {...register(`studyTimes.${index}.startTime`)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    type="time"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    id={`studyTimes.${index}.endTime`}
+                    label="Horário de término"
+                    error={!!errors.studyTimes?.[index]?.endTime}
+                    helperText={errors.studyTimes?.[index]?.endTime?.message}
+                    {...register(`studyTimes.${index}.endTime`)}
+                  />
+                </Grid>
+                <Grid item xs={studyTimesDates.length > 1 ? 3 : 4}>
+                  <Controller
+                    name={`studyTimes.${index}.daysOfWeek`}
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl fullWidth>
+                        <InputLabel id="daysOfWeek">Dias da semana</InputLabel>
+                        <Select
+                          {...field}
+                          labelId="daysOfWeek"
+                          label="daysOfWeek"
+                          multiple
+                          input={<OutlinedInput label="Dias da semana" />}
+                          renderValue={(selected) => selected.join(", ")}
+                        >
+                          {daysOfWeek.map((day: string) => (
+                            <MenuItem value={day} key={day}>
+                              <Checkbox
+                                checked={field?.value?.indexOf(day) > -1}
+                              />
+                              <ListItemText primary={day} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
+                  />
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid item xs={1} className={styles.addClassButtonContainer}>
+            <IconButton
+              color="primary"
+              aria-label="add"
+              size="large"
+              onClick={() =>
+                appendStudyTimes({
+                  startDate: "",
+                  endDate: "",
+                  startTime: "",
+                  endTime: "",
+                  daysOfWeek: [],
                 })
               }
             >

@@ -7,7 +7,7 @@ interface Props {
   event: EventImpl | null;
 }
 
-export default function ClassPopoverContent({ event }: Props) {
+export default function SubjectEventPopoverContent({ event }: Props) {
   return (
     <>
       <Typography variant="h5">{event?.title}</Typography>

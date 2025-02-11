@@ -13,3 +13,8 @@ export const ZSchedulerClassSchema = z.object({
   subjectId: z.string(),
   classes: ZAppointmentSchema.array().optional(),
 });
+
+export const ZStudyTimesSchema = z.object({
+  objectId: z.string(),
+  studyTimes: ZAppointmentSchema.array().optional(),
+});

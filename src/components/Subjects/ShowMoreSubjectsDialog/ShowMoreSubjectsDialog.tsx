@@ -155,6 +155,74 @@ export default function ShowMoreSubjectsDialog({
               </Grid>
             )}
 
+            {subject.studyTimes && subject.studyTimes.length > 0 && (
+              <Grid item container>
+                <Grid>
+                  <Typography variant="h6">Horários de estudo:</Typography>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  sx={{ marginTop: "0.1rem" }}
+                  rowSpacing={1}
+                >
+                  {subject.studyTimes.map((studyTime) => (
+                    <Grid item container xs={12}>
+                      <Grid
+                        item
+                        container
+                        xs={3}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Grid item xs={5}>
+                          <Typography variant="subtitle1">
+                            Dia das aulas:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          {studyTime.daysOfWeek[0]}
+                        </Grid>
+                      </Grid>{" "}
+                      <Grid
+                        item
+                        container
+                        xs={5}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Grid item xs={5}>
+                          <Typography variant="subtitle1">
+                            Datas de início e término:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={5}>{`${dayjs(studyTime.startDate).format(
+                          "DD-MM-YY"
+                        )} à ${dayjs(studyTime.endDate).format(
+                          "DD-MM-YY"
+                        )}  `}</Grid>
+                      </Grid>{" "}
+                      <Grid
+                        item
+                        container
+                        xs={3}
+                        columnSpacing={1}
+                        className={styles.classRow}
+                      >
+                        <Grid item xs={3}>
+                          <Typography variant="subtitle1">Horário:</Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={9}
+                        >{`${studyTime.startTime} à ${studyTime.endTime}`}</Grid>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+            )}
+
             {subject.tests && subject.tests.length > 0 && (
               <Grid item container sx={{ marginTop: "1rem" }}>
                 <Grid>

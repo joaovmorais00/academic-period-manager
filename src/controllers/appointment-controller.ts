@@ -1,7 +1,8 @@
 import { createDateInDefaultTimezone } from "@/config/dayjs";
 import {
-  createClasses,
+  createAppointments,
   deleteAllSubjectClasses,
+  deleteAllSubjectStudyTimes,
   getAppointmentsBySubjectIdService,
 } from "@/services/appointment-service";
 import { Appointment, ModelAppointment } from "@/types/Appointment";
@@ -36,7 +37,36 @@ async function createManyClasses(
       });
     })
   );
-  return await createClasses(modelAppointments);
+  return await createAppointments(modelAppointments);
+}
+
+async function createManyStudyTimes(
+  appointments: Appointment[],
+  userId: string,
+  subjectId: string
+) {
+  let modelAppointments: ModelAppointment[] = [];
+  appointments.map((appointment) =>
+    appointment.daysOfWeek.map((dayOfWeek) => {
+      modelAppointments.push({
+        createdByUserId: userId,
+        name: subjectId ? `${subjectId}-classes` : appointment.name ?? "",
+        dayOfWeek: DaysOfWeek.daysOfWeekToNumber(dayOfWeek),
+        startDateTime: createDateInDefaultTimezone(
+          Dates.createDateTimeString(
+            appointment.startDate,
+            appointment.startTime
+          )
+        ).toDate(),
+        endDateTime: createDateInDefaultTimezone(
+          Dates.createDateTimeString(appointment.endDate, appointment.endTime)
+        ).toDate(),
+        subjectId,
+        type: "STUDY_TIME",
+      });
+    })
+  );
+  return await createAppointments(modelAppointments);
 }
 
 async function getAppointmentsBySubjectId(subjectId: string) {
@@ -54,25 +84,20 @@ async function getAppointmentsBySubjectId(subjectId: string) {
   );
 }
 
-async function deleteAllSubjectAppointments(subjectId: string) {
+async function deleteAllClasses(subjectId: string) {
   return await deleteAllSubjectClasses(subjectId);
 }
 
-async function getAllAppointmentsFromUserIdToEvents(userId: string) {
-  const classes: EventInput[] = await SubjectController.getAllEventsByUserId(
-    userId
-  );
-
-  const events: EventInput[] = [...classes];
-
-  return events;
+async function deleteAllStudyTimes(subjectId: string) {
+  return await deleteAllSubjectStudyTimes(subjectId);
 }
 
 const AppointmentController = {
   createManyClasses,
   getAppointmentsBySubjectId,
-  deleteAllSubjectAppointments,
-  getAllAppointmentsFromUserIdToEvents,
+  deleteAllClasses,
+  deleteAllStudyTimes,
+  createManyStudyTimes,
 };
 
 export default AppointmentController;

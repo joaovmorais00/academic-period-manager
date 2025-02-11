@@ -10,10 +10,6 @@ export interface Test {
   typeTest: string;
 }
 
-export interface TesttWithId extends Test {
-  id: string;
-}
-
 export interface ModelTest {
   createdByUserId: string;
   startDateTime: Date;

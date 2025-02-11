@@ -2,8 +2,10 @@
 import SubjectController from "@/controllers/subject-controller";
 import styles from "./styles.module.css";
 
-import { Appointment, SchedulerClasses } from "@/types/Appointment";
-import { ZSchedulerClassSchema } from "@/utils/zod/appointment-schema";
+import AppointmentController from "@/controllers/appointment-controller";
+import { SchedulerStudyTimes } from "@/types/Appointment";
+import { TableSubject } from "@/types/Subject";
+import { ZStudyTimesSchema } from "@/utils/zod/appointment-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -33,16 +35,14 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "react-toastify";
-import { TableSubject } from "@/types/Subject";
-import AppointmentController from "@/controllers/appointment-controller";
 
-interface ClassFormProps {
+interface StudyTimeFormProps {
   successfulCreateEvent?: () => void;
 }
 
-export default function SchedulerClassForm({
+export default function SchedulerStudyTimesForm({
   successfulCreateEvent = () => {},
-}: ClassFormProps) {
+}: StudyTimeFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const session = useSession();
   const router = useRouter();
@@ -78,10 +78,10 @@ export default function SchedulerClassForm({
     control,
     reset,
     formState: { errors },
-  } = useForm<SchedulerClasses>({
-    resolver: zodResolver(ZSchedulerClassSchema),
+  } = useForm<SchedulerStudyTimes>({
+    resolver: zodResolver(ZStudyTimesSchema),
     defaultValues: {
-      classes: [
+      studyTimes: [
         {
           daysOfWeek: [],
           startDate: "",
@@ -95,40 +95,40 @@ export default function SchedulerClassForm({
   });
 
   const {
-    fields: classesDates,
-    append: appendClassesDates,
-    remove: removeClassesDates,
+    fields: studyTimesDates,
+    append: appendStudyTimes,
+    remove: removeStudyTimes,
   } = useFieldArray({
     control,
-    name: "classes",
+    name: "studyTimes",
   });
 
-  const onSubmit: SubmitHandler<SchedulerClasses> = ({
-    classes,
+  const onSubmit: SubmitHandler<SchedulerStudyTimes> = ({
+    studyTimes,
     subjectId,
   }) => {
     setLoading(true);
 
-    AppointmentController.createManyClasses(
-      classes,
+    AppointmentController.createManyStudyTimes(
+      studyTimes,
       session.data?.user?.id ?? "",
       subjectId
     )
       .then(() => {
         reset();
-        toast.success("Aula cadastrada com sucesso");
+        toast.success("Horário de estudo cadastrado com sucesso");
         successfulCreateEvent();
         setLoading(false);
       })
       .catch(() => {
         setLoading(false);
-        toast.error("Houve um erro ao cadastrar a aula");
+        toast.error("Houve um erro ao cadastrar horario de estudo");
       });
 
     setLoading(false);
   };
 
-  const onError = (errors: FieldErrors<SchedulerClasses>) => {
+  const onError = (errors: FieldErrors<SchedulerStudyTimes>) => {
     console.log("Erros de validação:", errors);
   };
 
@@ -161,19 +161,26 @@ export default function SchedulerClassForm({
         <Grid item container xs={12} rowSpacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6" className="mb-3">
-              Aulas
+              Horários de estudo
             </Typography>
           </Grid>
-          <Grid item container xs={11} rowSpacing={1}>
-            {classesDates.map((field, index) => (
-              <Grid item container key={field.id} xs={12} columnSpacing={1}>
-                {classesDates.length > 1 && (
+          <Grid item container xs={11} rowSpacing={3}>
+            {studyTimesDates.map((field, index) => (
+              <Grid
+                item
+                container
+                key={field.id}
+                xs={12}
+                columnSpacing={1}
+                rowSpacing={1}
+              >
+                {studyTimesDates.length > 1 && (
                   <Grid item xs={1}>
                     <IconButton
                       color="error"
                       aria-label="add"
                       size="large"
-                      onClick={() => removeClassesDates(index)}
+                      onClick={() => removeStudyTimes(index)}
                     >
                       <RemoveIcon fontSize="large" />
                     </IconButton>
@@ -184,11 +191,11 @@ export default function SchedulerClassForm({
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.startDate`}
+                    id={`studyTimes.${index}.startDate`}
                     label="Data de início"
-                    error={!!errors.classes?.[index]?.startDate}
-                    helperText={errors.classes?.[index]?.startDate?.message}
-                    {...register(`classes.${index}.startDate`)}
+                    error={!!errors.studyTimes?.[index]?.startDate}
+                    helperText={errors.studyTimes?.[index]?.startDate?.message}
+                    {...register(`studyTimes.${index}.startDate`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -196,11 +203,11 @@ export default function SchedulerClassForm({
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.endDate`}
+                    id={`studyTimes.${index}.endDate`}
                     label="Data de término"
-                    error={!!errors.classes?.[index]?.endDate}
-                    helperText={errors.classes?.[index]?.endDate?.message}
-                    {...register(`classes.${index}.endDate`)}
+                    error={!!errors.studyTimes?.[index]?.endDate}
+                    helperText={errors.studyTimes?.[index]?.endDate?.message}
+                    {...register(`studyTimes.${index}.endDate`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -208,11 +215,11 @@ export default function SchedulerClassForm({
                     type="time"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.startTime`}
+                    id={`studyTimes.${index}.startTime`}
                     label="Horário de início"
-                    error={!!errors.classes?.[index]?.startTime}
-                    helperText={errors.classes?.[index]?.startTime?.message}
-                    {...register(`classes.${index}.startTime`)}
+                    error={!!errors.studyTimes?.[index]?.startTime}
+                    helperText={errors.studyTimes?.[index]?.startTime?.message}
+                    {...register(`studyTimes.${index}.startTime`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -220,16 +227,16 @@ export default function SchedulerClassForm({
                     type="time"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.endTime`}
+                    id={`studyTimes.${index}.endTime`}
                     label="Horário de término"
-                    error={!!errors.classes?.[index]?.endTime}
-                    helperText={errors.classes?.[index]?.endTime?.message}
-                    {...register(`classes.${index}.endTime`)}
+                    error={!!errors.studyTimes?.[index]?.endTime}
+                    helperText={errors.studyTimes?.[index]?.endTime?.message}
+                    {...register(`studyTimes.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={classesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={studyTimesDates.length > 1 ? 3 : 4}>
                   <Controller
-                    name={`classes.${index}.daysOfWeek`}
+                    name={`studyTimes.${index}.daysOfWeek`}
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
@@ -264,7 +271,7 @@ export default function SchedulerClassForm({
               aria-label="add"
               size="large"
               onClick={() =>
-                appendClassesDates({
+                appendStudyTimes({
                   startDate: "",
                   endDate: "",
                   startTime: "",
