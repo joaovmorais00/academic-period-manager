@@ -22,3 +22,8 @@ export interface ModelTest {
   score?: number;
   worth?: number;
 }
+
+export interface SchedulerTests {
+  tests: Test[];
+  subjectId: string;
+}

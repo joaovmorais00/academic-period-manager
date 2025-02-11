@@ -7,8 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import ClassForm from "../../Classes/ClassForm/ClassForm";
+import SchedulerClassForm from "../../Classes/SchedulerClassForm/SchedulerClassForm";
 import styles from "./styles.module.css";
+import TestForm from "../../SchedulerTests/TestsForm/TestsForm";
 
 interface Props {
   open: boolean;
@@ -29,9 +30,29 @@ export default function CreateEventModal({
     switch (typeEvent) {
       case "class":
         return "Nova aula";
+      case "test":
+        return "Nova prova";
 
       default:
         return "Novo evento";
+    }
+  };
+
+  const getComponent = () => {
+    switch (typeEvent) {
+      case "class":
+        return (
+          <SchedulerClassForm
+            successfulCreateEvent={handleSuccessfulCreateEvent}
+          />
+        );
+
+      case "test":
+        return <TestForm successfulCreateEvent={handleSuccessfulCreateEvent} />;
+
+      default:
+        <></>;
+        break;
     }
   };
 
@@ -44,8 +65,6 @@ export default function CreateEventModal({
       PaperProps={{
         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const formJson = Object.fromEntries((formData as any).entries());
         },
       }}
     >
@@ -66,11 +85,7 @@ export default function CreateEventModal({
         </div>
       </DialogTitle>
       <DialogContent>
-        <div style={{ paddingTop: "1rem" }}>
-          {typeEvent === "class" && (
-            <ClassForm successfulCreateEvent={handleSuccessfulCreateEvent} />
-          )}
-        </div>
+        <div style={{ paddingTop: "1rem" }}>{getComponent()}</div>
       </DialogContent>
     </Dialog>
   );

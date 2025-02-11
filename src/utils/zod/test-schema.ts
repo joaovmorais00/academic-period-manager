@@ -9,3 +9,8 @@ export const ZTestSchema = z.object({
   worth: z.string().optional(),
   score: z.string().optional(),
 });
+
+export const ZSchedulerTestSchema = z.object({
+  tests: ZTestSchema.array(),
+  subjectId: z.string(),
+});
