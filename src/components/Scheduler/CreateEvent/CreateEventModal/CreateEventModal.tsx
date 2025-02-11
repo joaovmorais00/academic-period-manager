@@ -1,6 +1,14 @@
-import SubjectForm from "@/components/Subjects/SubjectForm/SubjectForm";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React from "react";
+import ClassForm from "../../Classes/ClassForm/ClassForm";
+import styles from "./styles.module.css";
 
 interface Props {
   open: boolean;
@@ -38,15 +46,29 @@ export default function CreateEventModal({
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries((formData as any).entries());
-          const email = formJson.email;
         },
       }}
     >
-      <DialogTitle>{title()}</DialogTitle>
+      <DialogTitle>
+        <div className={styles.headerDiv}>
+          <div>
+            <Typography variant="h4">{title()}</Typography>
+          </div>
+          <div>
+            <IconButton
+              aria-label="delete"
+              size="large"
+              onClick={() => handleClose(false)}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          </div>
+        </div>
+      </DialogTitle>
       <DialogContent>
         <div style={{ paddingTop: "1rem" }}>
           {typeEvent === "class" && (
-            <SubjectForm successfulCreateEvent={handleSuccessfulCreateEvent} />
+            <ClassForm successfulCreateEvent={handleSuccessfulCreateEvent} />
           )}
         </div>
       </DialogContent>
