@@ -27,3 +27,8 @@ export interface SchedulerClasses {
   subjectId: string;
   classes: Appointment[];
 }
+
+export interface SchedulerStudyTimes {
+  subjectId: string;
+  studyTimes: Appointment[];
+}

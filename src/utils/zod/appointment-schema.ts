@@ -16,5 +16,5 @@ export const ZSchedulerClassSchema = z.object({
 
 export const ZStudyTimesSchema = z.object({
   objectId: z.string(),
-  study: ZAppointmentSchema.array().optional(),
+  studyTimes: ZAppointmentSchema.array().optional(),
 });

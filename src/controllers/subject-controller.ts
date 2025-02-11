@@ -116,7 +116,8 @@ async function update(
   subject: SubjectWithId,
   userId: string,
   updateClasses: boolean,
-  updateTests: boolean
+  updateTests: boolean,
+  updateStudyTimes: boolean
 ) {
   await updateSubject(subject, userId);
   if (updateClasses) {
@@ -132,6 +133,14 @@ async function update(
     await TestController.deleteAllSubjectTests(subject.id);
     await TestController.createManyTests(
       subject.tests ?? [],
+      userId,
+      subject.id
+    );
+  }
+  if (updateStudyTimes) {
+    await AppointmentController.deleteAllStudyTimes(subject.id);
+    await AppointmentController.createManyStudyTimes(
+      subject.classes ?? [],
       userId,
       subject.id
     );

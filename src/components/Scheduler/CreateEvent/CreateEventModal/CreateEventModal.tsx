@@ -10,6 +10,7 @@ import React from "react";
 import SchedulerClassForm from "../../Classes/SchedulerClassForm/SchedulerClassForm";
 import styles from "./styles.module.css";
 import TestForm from "../../SchedulerTests/TestsForm/TestsForm";
+import SchedulerStudyTimesForm from "../../SchedulerStudyTimes/SchedulerStudyTimesForm/SchedulerStudyTimesForm";
 
 interface Props {
   open: boolean;
@@ -28,9 +29,9 @@ export default function CreateEventModal({
 
   const title = () => {
     switch (typeEvent) {
-      case "class":
+      case "CLASS":
         return "Nova aula";
-      case "test":
+      case "TEST":
         return "Nova prova";
 
       default:
@@ -40,16 +41,21 @@ export default function CreateEventModal({
 
   const getComponent = () => {
     switch (typeEvent) {
-      case "class":
+      case "CLASS":
         return (
           <SchedulerClassForm
             successfulCreateEvent={handleSuccessfulCreateEvent}
           />
         );
 
-      case "test":
+      case "TEST":
         return <TestForm successfulCreateEvent={handleSuccessfulCreateEvent} />;
-
+      case "STUDY_TIME":
+        return (
+          <SchedulerStudyTimesForm
+            successfulCreateEvent={handleSuccessfulCreateEvent}
+          />
+        );
       default:
         <></>;
         break;
