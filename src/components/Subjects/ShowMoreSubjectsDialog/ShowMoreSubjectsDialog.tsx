@@ -29,7 +29,10 @@ export default function ShowMoreSubjectsDialog({
   const [subject, setSubject] = useState<Subject>({ title: "", teacher: "" });
 
   useEffect(() => {
-    SubjectController.get(subjectId).then((response) => setSubject(response));
+    SubjectController.get(subjectId).then((response) => {
+      console.log(response, "response chegand0");
+      setSubject(response);
+    });
   }, [subjectId]);
 
   const getTypeTestTitle = (keyTypeTest: string) => {
@@ -98,8 +101,8 @@ export default function ShowMoreSubjectsDialog({
                   sx={{ marginTop: "0.1rem" }}
                   rowSpacing={1}
                 >
-                  {subject.classes.map((classItem) => (
-                    <Grid item container xs={12}>
+                  {subject.classes.map((classItem, index) => (
+                    <Grid key={index} item container xs={12}>
                       <Grid
                         item
                         container
@@ -166,8 +169,8 @@ export default function ShowMoreSubjectsDialog({
                   sx={{ marginTop: "0.1rem" }}
                   rowSpacing={1}
                 >
-                  {subject.studyTimes.map((studyTime) => (
-                    <Grid item container xs={12}>
+                  {subject.studyTimes.map((studyTime, index) => (
+                    <Grid key={index} item container xs={12}>
                       <Grid
                         item
                         container
@@ -234,8 +237,8 @@ export default function ShowMoreSubjectsDialog({
                   sx={{ marginTop: "0.1rem" }}
                   rowSpacing={4}
                 >
-                  {subject.tests.map((test) => (
-                    <Grid item container xs={12}>
+                  {subject.tests.map((test, index) => (
+                    <Grid key={index} item container xs={12}>
                       <Grid
                         item
                         xs={3}

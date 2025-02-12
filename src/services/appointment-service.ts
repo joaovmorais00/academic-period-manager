@@ -42,3 +42,14 @@ export async function deleteAllSubjectStudyTimes(subjectId: string) {
     },
   });
 }
+
+export async function deleteAllExtraActivityWorkSchedules(
+  extraActivityId: string
+) {
+  return await prismaClient.appointment.deleteMany({
+    where: {
+      extraActivityId,
+      type: "EXTRA",
+    },
+  });
+}

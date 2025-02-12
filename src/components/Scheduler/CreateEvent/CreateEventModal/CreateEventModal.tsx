@@ -11,6 +11,7 @@ import SchedulerClassForm from "../../Classes/SchedulerClassForm/SchedulerClassF
 import styles from "./styles.module.css";
 import TestForm from "../../SchedulerTests/TestsForm/TestsForm";
 import SchedulerStudyTimesForm from "../../SchedulerStudyTimes/SchedulerStudyTimesForm/SchedulerStudyTimesForm";
+import ExtraActivityForm from "@/components/ExtraActivities/ExtraActivityForm/ExtraActivityForm";
 
 interface Props {
   open: boolean;
@@ -32,8 +33,11 @@ export default function CreateEventModal({
       case "CLASS":
         return "Nova aula";
       case "TEST":
-        return "Nova prova";
-
+        return "Nova atividade avaliativa";
+      case "STUDY_TIME":
+        return "Nova horário de estudo";
+      case "EXTRA":
+        return "Nova atividade extra";
       default:
         return "Novo evento";
     }
@@ -53,6 +57,12 @@ export default function CreateEventModal({
       case "STUDY_TIME":
         return (
           <SchedulerStudyTimesForm
+            successfulCreateEvent={handleSuccessfulCreateEvent}
+          />
+        );
+      case "EXTRA":
+        return (
+          <ExtraActivityForm
             successfulCreateEvent={handleSuccessfulCreateEvent}
           />
         );

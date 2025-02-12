@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { ZAppointmentSchema } from "./appointment-schema";
-import { ZAssessmentSchema } from "./assessment-schema";
 import { ZTestSchema } from "./test-schema";
 
 export const ZSubjectSchema = z.object({

@@ -1,19 +1,8 @@
 import { EventContentArg } from "@fullcalendar/core/index.js";
-import ClassIcon from "@mui/icons-material/Class";
 import dayjs from "dayjs";
 import styles from "./styles.module.css";
 
 export default function EventContent(eventInfo: EventContentArg) {
-  const eventIcon = (typeEvent: string) => {
-    switch (typeEvent) {
-      case "class":
-        return <ClassIcon className={styles.iconSize} />;
-
-      default:
-        return <></>;
-    }
-  };
-
   return (
     <div
       style={{
@@ -26,9 +15,6 @@ export default function EventContent(eventInfo: EventContentArg) {
         alignItems: "center",
       }}
     >
-      <div className={styles.iconEvent}>
-        {eventIcon(eventInfo.event.extendedProps.eventType)}
-      </div>
       <div className={styles.timeEvent}>{` ${dayjs(
         eventInfo.event.start
       ).hour()}:${dayjs(eventInfo.event.start).minute() < 10 ? "0" : ""}${dayjs(

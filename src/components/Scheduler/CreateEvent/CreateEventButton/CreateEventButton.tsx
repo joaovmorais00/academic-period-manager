@@ -17,10 +17,10 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleClickTypeEvent = (typeEvent: string) => {
+  function handleClickTypeEvent(typeEvent: string) {
     handleClose();
     handleSelectTypeEvent(typeEvent);
-  };
+  }
   return (
     <>
       <Button
@@ -61,11 +61,11 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
         >
           Horário de Estudo
         </MenuItem>
-        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
-          Reunião
-        </MenuItem>
-        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
-          Atividade Complementar
+        <MenuItem
+          sx={{ minWidth: " 10rem" }}
+          onClick={() => handleClickTypeEvent("EXTRA")}
+        >
+          Atividade Extra
         </MenuItem>
       </Menu>
     </>

@@ -1,0 +1,23 @@
+.headerDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.classRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

@@ -109,10 +109,11 @@ export default function SchedulerStudyTimesForm({
   }) => {
     setLoading(true);
 
-    AppointmentController.createManyStudyTimes(
+    AppointmentController.createManyAppointments(
       studyTimes,
       session.data?.user?.id ?? "",
-      subjectId
+      subjectId,
+      "STUDY_TIME"
     )
       .then(() => {
         reset();

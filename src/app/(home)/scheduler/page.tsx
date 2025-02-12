@@ -14,6 +14,7 @@ import styles from "./page.module.css";
 import CreateEventButton from "@/components/Scheduler/CreateEvent/CreateEventButton/CreateEventButton";
 import CreateEventModal from "@/components/Scheduler/CreateEvent/CreateEventModal/CreateEventModal";
 import SubjectController from "@/controllers/subject-controller";
+import ExtraActivityController from "@/controllers/extra-activity-controller";
 
 export default function page() {
   const session = useSession();
@@ -48,13 +49,15 @@ export default function page() {
     setSelectedTypeEventToCreate("");
   };
 
-  const getEvents = () => {
-    SubjectController.getAllEventsByUserId(session.data?.user.id ?? "").then(
-      (response) => {
-        setEvents(response);
-      }
+  async function getEvents() {
+    const subjectEvents = await SubjectController.getAllEventsByUserId(
+      session.data?.user.id ?? ""
     );
-  };
+    const extraEvents = await ExtraActivityController.getAllEventsByUserId(
+      session.data?.user.id ?? ""
+    );
+    setEvents([...subjectEvents, ...extraEvents]);
+  }
 
   useEffect(() => {
     if (session.data?.user.id) getEvents();

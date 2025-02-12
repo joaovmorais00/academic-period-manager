@@ -18,16 +18,39 @@ import TestController from "./test-controller";
 async function create(subject: Subject, userId: string) {
   try {
     const createdSubject = await createSubject(subject, userId);
-    await AppointmentController.createManyClasses(
-      subject.classes ?? [],
-      userId,
-      createdSubject.id
-    );
-    await TestController.createManyTests(
-      subject.tests ?? [],
-      userId,
-      createdSubject.id
-    );
+    const auxSubject = {
+      tests: subject.tests?.filter(
+        ({ topic, typeTest }) => topic !== "" && typeTest !== ""
+      ),
+      classes: subject.classes?.filter(
+        ({ startDate, endDate }) => startDate !== "" && endDate !== ""
+      ),
+      studyTimes: subject.studyTimes?.filter(
+        ({ startDate, endDate }) => startDate !== "" && endDate !== ""
+      ),
+      ...subject,
+    };
+    if (auxSubject.classes && auxSubject.classes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        auxSubject.classes,
+        userId,
+        createdSubject.id,
+        "CLASS"
+      );
+    if (auxSubject.tests && auxSubject.tests?.length > 0)
+      await TestController.createManyTests(
+        auxSubject.tests,
+        userId,
+        createdSubject.id
+      );
+
+    if (auxSubject.studyTimes && auxSubject.studyTimes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        auxSubject.studyTimes,
+        userId,
+        createdSubject.id,
+        "STUDY_TIME"
+      );
 
     return true;
   } catch (error) {
@@ -38,28 +61,23 @@ async function create(subject: Subject, userId: string) {
 
 async function get(id: string) {
   const response = await getSubjectById(id);
-  const classes = response?.classesAndStudyTimes.reduce(
-    (
-      acc: AppointmentWithId[],
-      { id, name, startDateTime, endDateTime, dayOfWeek, type }
-    ) => {
-      if (type === "CLASS") {
-        acc.push({
-          id,
-          name,
-          daysOfWeek: dayOfWeek
-            ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)]
-            : [],
-          startDate: Dates.DateTimeToStringDate(startDateTime),
-          endDate: Dates.DateTimeToStringDate(endDateTime),
-          startTime: Dates.DateTimeToStringTime(startDateTime),
-          endTime: Dates.DateTimeToStringTime(endDateTime),
-        });
-      }
-      return acc;
-    },
-    []
+  const classes: AppointmentWithId[] = [];
+  const studyTimes: AppointmentWithId[] = [];
+  response?.classesAndStudyTimes.map(
+    ({ id, startDateTime, endDateTime, dayOfWeek, type }) => {
+      const appointment = {
+        id,
+        daysOfWeek: dayOfWeek ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)] : [],
+        startDate: Dates.DateTimeToStringDate(startDateTime),
+        endDate: Dates.DateTimeToStringDate(endDateTime),
+        startTime: Dates.DateTimeToStringTime(startDateTime),
+        endTime: Dates.DateTimeToStringTime(endDateTime),
+      };
+      if (type === "CLASS") classes.push(appointment);
+      if (type === "STUDY_TIME") studyTimes.push(appointment);
+    }
   );
+
   const tests = response?.tests.map(
     ({
       id,
@@ -81,7 +99,7 @@ async function get(id: string) {
       score: score?.toString(),
       worth: worth?.toString(),
       link: link ?? "",
-      typeTest: type ?? "test",
+      typeTest: type ?? "TEST",
     })
   );
   const subject = {
@@ -90,6 +108,7 @@ async function get(id: string) {
     teacher: !response?.teacher ? "" : response.teacher,
     description: !response?.description ? "" : response.description,
     classes,
+    studyTimes,
     tests,
   };
   return subject;
@@ -122,28 +141,28 @@ async function update(
   await updateSubject(subject, userId);
   if (updateClasses) {
     await AppointmentController.deleteAllClasses(subject.id);
-
-    await AppointmentController.createManyClasses(
-      subject.classes ?? [],
-      userId,
-      subject.id
-    );
+    if (subject.classes && subject.classes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        subject.classes,
+        userId,
+        subject.id,
+        "CLASS"
+      );
   }
   if (updateTests) {
     await TestController.deleteAllSubjectTests(subject.id);
-    await TestController.createManyTests(
-      subject.tests ?? [],
-      userId,
-      subject.id
-    );
+    if (subject.tests && subject.tests?.length > 0)
+      await TestController.createManyTests(subject.tests, userId, subject.id);
   }
   if (updateStudyTimes) {
     await AppointmentController.deleteAllStudyTimes(subject.id);
-    await AppointmentController.createManyStudyTimes(
-      subject.classes ?? [],
-      userId,
-      subject.id
-    );
+    if (subject.studyTimes && subject.studyTimes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        subject.studyTimes,
+        userId,
+        subject.id,
+        "STUDY_TIME"
+      );
   }
   return true;
 }
@@ -181,7 +200,8 @@ async function getAllEventsByUserId(userId: string) {
               .set("hour", endDate.hour())
               .set("minute", endDate.minute())
               .toDate(),
-            backgroundColor: appointment.type === "CLASS" ? "green" : "gray",
+            backgroundColor:
+              appointment.type === "CLASS" ? "#024a86" : "#23bac4",
             textColor: "white",
             infos: {
               eventType: appointment.type,
@@ -198,10 +218,10 @@ async function getAllEventsByUserId(userId: string) {
         title: `${getTypeTestTitle(test.type)} de ${subject.title}`,
         start: dayjs(test.startDateTime).toDate(),
         end: dayjs(test.endDateTime).toDate(),
-        backgroundColor: "blue",
+        backgroundColor: "#ef280f",
         textColor: "white",
         infos: {
-          eventType: "test",
+          eventType: "TEST",
           teacher: subject.teacher,
           topic: test.topic,
           notes: test.notes,

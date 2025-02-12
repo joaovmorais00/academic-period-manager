@@ -28,7 +28,6 @@ async function createManyTests(
       link: test.link,
       type: test.typeTest,
     }));
-    console.log("tá indo ", modelTests);
     return await createTests(modelTests);
   } catch (error) {
     throw error;

@@ -14,38 +14,36 @@ datasource db {
 }
 
 model User {
-  id                      String                  @id @default(uuid())
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
-  name                    String
-  email                   String                  @unique
-  password                String
-  isAdmin                 Boolean                 @default(false)
-  Appointments            Appointment[]
-  Subjects                Subject[]
-  Tests                   Test[]
-  Meet                    Meet[]
-  ComplementaryActivities ComplementaryActivity[]
+  id            String          @id @default(uuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  name          String
+  email         String          @unique
+  password      String
+  isAdmin       Boolean         @default(false)
+  Appointments  Appointment[]
+  Subjects      Subject[]
+  Tests         Test[]
+  ExtraActivity ExtraActivity[]
 }
 
 model Appointment {
-  id                      String                 @id @default(uuid())
-  createdAt               DateTime               @default(now())
-  updatedAt               DateTime               @updatedAt
-  createdBy               User                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByUserId         String
-  name                    String?
-  startDateTime           DateTime
-  endDateTime             DateTime
-  dayOfWeek               Int?
-  notes                   String?
-  type                    ActivityType           @default(CLASS)
-  Subject                 Subject?               @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  subjectId               String?
-  Test                    Test?                  @relation(fields: [testId], references: [id])
-  testId                  String?
-  ComplementaryActivity   ComplementaryActivity? @relation(fields: [complementaryActivityId], references: [id], onDelete: Cascade)
-  complementaryActivityId String?
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdBy       User           @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUserId String
+  startDateTime   DateTime
+  endDateTime     DateTime
+  dayOfWeek       Int?
+  notes           String?
+  type            ActivityType   @default(CLASS)
+  Subject         Subject?       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId       String?
+  Test            Test?          @relation(fields: [testId], references: [id])
+  testId          String?
+  ExtraActivity   ExtraActivity? @relation(fields: [extraActivityId], references: [id])
+  extraActivityId String?
 }
 
 model Subject {
@@ -74,42 +72,34 @@ model Test {
   score           Int?
   worth           Int?
   link            String?
-  type            String        @default("TEST")
-  Meet            Meet[]
+  type            TestType      @default(TEST)
   studyTimes      Appointment[]
   Subject         Subject?      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId       String?
 }
 
-model ComplementaryActivity {
+model ExtraActivity {
   id              String        @id @default(uuid())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   createdBy       User          @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
   createdByUserId String
-  type            String
+  title           String
   notes           String?
   link            String?
   workSchedules   Appointment[]
-  Meet            Meet[]
-}
-
-model Meet {
-  id                       String                 @id @default(uuid())
-  createdAt                DateTime               @default(now())
-  updatedAt                DateTime               @updatedAt
-  createdBy                User                   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
-  createdByUserId          String
-  ComplementaryActivity    ComplementaryActivity? @relation(fields: [complementary_ActivityId], references: [id], onDelete: Cascade)
-  complementary_ActivityId String?
-  startDateTime            DateTime
-  endDateTime              DateTime
-  notes                    String?
-  Test                     Test?                  @relation(fields: [testId], references: [id])
-  testId                   String?
 }
 
 enum ActivityType {
   CLASS
   STUDY_TIME
+  EXTRA
+}
+
+enum TestType {
+  TEST
+  SEMINAR
+  ARTICLE
+  EXERCISE
+  OTHER
 }
