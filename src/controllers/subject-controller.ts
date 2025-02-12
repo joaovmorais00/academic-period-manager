@@ -200,7 +200,8 @@ async function getAllEventsByUserId(userId: string) {
               .set("hour", endDate.hour())
               .set("minute", endDate.minute())
               .toDate(),
-            backgroundColor: appointment.type === "CLASS" ? "green" : "gray",
+            backgroundColor:
+              appointment.type === "CLASS" ? "#024a86" : "#23bac4",
             textColor: "white",
             infos: {
               eventType: appointment.type,
@@ -217,7 +218,7 @@ async function getAllEventsByUserId(userId: string) {
         title: `${getTypeTestTitle(test.type)} de ${subject.title}`,
         start: dayjs(test.startDateTime).toDate(),
         end: dayjs(test.endDateTime).toDate(),
-        backgroundColor: "blue",
+        backgroundColor: "#ef280f",
         textColor: "white",
         infos: {
           eventType: "TEST",

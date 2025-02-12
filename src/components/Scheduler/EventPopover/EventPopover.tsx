@@ -1,7 +1,8 @@
 import { EventImpl } from "@fullcalendar/core/internal.js";
-import { Popover, Typography } from "@mui/material";
-import styles from "./styles.module.css";
+import { Popover } from "@mui/material";
 import dayjs from "dayjs";
+import ExtraActivityPopoverContent from "./ExtraActivityPopoverContent/ExtraActivityPopoverContent";
+import styles from "./styles.module.css";
 import ClassPopoverContent from "./SubjectEventPopoverContent/SubjectEventPopoverContent";
 import TestPopoverContent from "./TestPopoverContent/TestPopoverContent";
 require("dayjs/locale/pt-br");
@@ -23,6 +24,10 @@ export default function EventPopover({ event, onClose, anchorEl }: Props) {
 
       case "TEST":
         return <TestPopoverContent event={event} />;
+
+      case "EXTRA":
+        return <ExtraActivityPopoverContent event={event} />;
+
       default:
         <></>;
         break;

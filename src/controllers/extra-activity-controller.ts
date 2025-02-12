@@ -2,6 +2,7 @@ import {
   createExtraActivity,
   deleteExtraActivity,
   getAllExtraActivitiesByUserId,
+  getAllExtraActivitiesEventsByUserId,
   getExtraActivityById,
   updateExtraActivity,
 } from "@/services/extra-activity-service";
@@ -14,6 +15,8 @@ import {
 import Dates from "@/utils/Dates";
 import DaysOfWeek from "@/utils/DaysOfWeek";
 import AppointmentController from "./appointment-controller";
+import { EventInput } from "@fullcalendar/core/index.js";
+import dayjs from "dayjs";
 
 async function create(extraActivity: ExtraActivity, userId: string) {
   try {
@@ -104,6 +107,45 @@ async function getAllByUserId(userId: string) {
   return extraActivities;
 }
 
-const ExtraActivityController = { create, update, get, remove, getAllByUserId };
+async function getAllEventsByUserId(userId: string) {
+  const events: EventInput[] = [];
+  const extraActivities = await getAllExtraActivitiesEventsByUserId(userId);
+  extraActivities.map((item) => {
+    item.workSchedules.map((appointment) => {
+      let dayAux = dayjs(appointment.startDateTime);
+      const endDate = dayjs(appointment.endDateTime);
+      while (dayAux.isAfter(endDate, "day") === false) {
+        if (dayAux.day() === appointment.dayOfWeek) {
+          events.push({
+            title: `Extra - ${item.title}`,
+            start: dayAux.toDate(),
+            end: dayjs(dayAux)
+              .set("hour", endDate.hour())
+              .set("minute", endDate.minute())
+              .toDate(),
+            backgroundColor: "#02ac66",
+            textColor: "white",
+            infos: {
+              eventType: appointment.type,
+              notes: item.notes,
+              link: item.link,
+            },
+          });
+        }
+        dayAux = dayAux.add(1, "day");
+      }
+    });
+  });
+  return events;
+}
+
+const ExtraActivityController = {
+  create,
+  update,
+  get,
+  remove,
+  getAllByUserId,
+  getAllEventsByUserId,
+};
 
 export default ExtraActivityController;

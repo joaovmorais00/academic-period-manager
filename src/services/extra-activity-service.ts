@@ -61,3 +61,12 @@ export async function getAllExtraActivitiesByUserId(id: string) {
     where: { createdByUserId: id },
   });
 }
+
+export async function getAllExtraActivitiesEventsByUserId(userId: string) {
+  return await prismaClient.extraActivity.findMany({
+    where: { createdByUserId: userId },
+    include: {
+      workSchedules: true,
+    },
+  });
+}
