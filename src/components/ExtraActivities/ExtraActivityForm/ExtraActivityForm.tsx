@@ -125,7 +125,7 @@ export default function ExtraActivityForm({
       )
         .then((response) => {
           toast.success("Atividade extra atualizada com sucesso");
-          router.push("/subjects");
+          router.push("/extra-activities");
           setLoading(false);
         })
         .catch((error) => {
@@ -148,7 +148,7 @@ export default function ExtraActivityForm({
             required
             fullWidth
             id="title"
-            label="Título da Disciplina"
+            label="Título da atividade"
             InputLabelProps={{ shrink: true }}
             autoFocus
             error={!!errors.title}

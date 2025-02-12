@@ -1,3 +1,5 @@
+"use server";
+
 import { prismaClient } from "@/config/prismaClient";
 import { ExtraActivity, ExtraActivityWithId } from "@/types/ExtraActivity";
 

@@ -2,6 +2,7 @@
 
 import TableBox from "@/components/common/Table/TableBox";
 import TemplatePage from "@/components/common/TemplatePage/TemplatePage";
+import ShowMoreExtraActivitiesDialog from "@/components/ExtraActivities/ShowMoreExtraActivitiesDialog/ShowMoreExtraActivitiesDialog";
 import ShowMoreSubjectsDialog from "@/components/Subjects/ShowMoreSubjectsDialog/ShowMoreSubjectsDialog";
 import ExtraActivityController from "@/controllers/extra-activity-controller";
 import { TableExtraActivity } from "@/types/ExtraActivity";
@@ -60,7 +61,7 @@ export default function ExtraActivitiesPage() {
       .finally(() => setLoading(false));
   }
 
-  function handleShowMoreSubject(id: string) {
+  function handleShowMoreExtraActivity(id: string) {
     setExtraActivityToShowId(id);
     setOpenShowMoreExtraActivity(true);
   }
@@ -82,7 +83,7 @@ export default function ExtraActivitiesPage() {
           aria-label="edit"
           size="large"
           onClick={() => {
-            handleShowMoreSubject(`${params.id}`);
+            handleShowMoreExtraActivity(`${params.id}`);
           }}
         >
           <VisibilityIcon fontSize="inherit" />
@@ -91,7 +92,7 @@ export default function ExtraActivitiesPage() {
           aria-label="edit"
           size="large"
           onClick={() => {
-            router.push(`extra-activities/${params.id}`);
+            router.push(`extra-activity/${params.id}`);
           }}
         >
           <EditIcon fontSize="inherit" />
@@ -137,10 +138,10 @@ export default function ExtraActivitiesPage() {
           />
         </TableBox>
       </TemplatePage>
-      <ShowMoreSubjectsDialog
+      <ShowMoreExtraActivitiesDialog
         open={openShowMoreExtraActivity}
         handleClose={handleCloseShowMoreModal}
-        subjectId={extraActivityToShowId}
+        extraActivityId={extraActivityToShowId}
       />
     </>
   );

@@ -5,16 +5,15 @@ import {
   getExtraActivityById,
   updateExtraActivity,
 } from "@/services/extra-activity-service";
+import { AppointmentWithId } from "@/types/Appointment";
 import {
   ExtraActivity,
   ExtraActivityWithId,
   TableExtraActivity,
 } from "@/types/ExtraActivity";
-import AppointmentController from "./appointment-controller";
-import { AppointmentWithId } from "@/types/Appointment";
-import DaysOfWeek from "@/utils/DaysOfWeek";
 import Dates from "@/utils/Dates";
-import { link } from "fs";
+import DaysOfWeek from "@/utils/DaysOfWeek";
+import AppointmentController from "./appointment-controller";
 
 async function create(extraActivity: ExtraActivity, userId: string) {
   try {
@@ -49,7 +48,7 @@ async function update(
       extraActivity.workSchedules ?? [],
       userId,
       extraActivity.id,
-      "CLASS"
+      "EXTRA"
     );
   }
   return true;
@@ -80,11 +79,11 @@ async function get(id: string) {
   );
 
   const extraActivity = {
-    ...response,
+    id,
     title: response?.title ?? "",
     notes: response?.notes ?? "",
     link: response?.link ?? "",
-    workSchedules,
+    workSchedules: workSchedules ?? [],
   };
   return extraActivity;
 }

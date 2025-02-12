@@ -46,7 +46,7 @@ const itemsMenuStudent: itemMenu[] = [
   },
   {
     name: "Atividades Extra",
-    link: "/",
+    link: "/extra-activities",
     icon: <PostAddIcon />,
   },
 ];
