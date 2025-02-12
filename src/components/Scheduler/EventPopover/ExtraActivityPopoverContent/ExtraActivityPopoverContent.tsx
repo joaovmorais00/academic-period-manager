@@ -1,7 +1,7 @@
 import { EventImpl } from "@fullcalendar/core/internal.js";
 import { Typography } from "@mui/material";
 import dayjs from "dayjs";
-import style from "./style.module.css";
+import styles from "./styles.module.css";
 
 interface Props {
   event: EventImpl | null;
@@ -24,7 +24,7 @@ export default function ExtraActivityPopoverContent({ event }: Props) {
         <Typography>
           Link:{" "}
           <a
-            className={style.link}
+            className={styles.link}
             href={event?.extendedProps.infos?.link}
             target="_blank"
           >
