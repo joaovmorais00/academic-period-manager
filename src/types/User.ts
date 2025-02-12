@@ -2,6 +2,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
+  isAdmin?: string;
 }
 
 export interface CompletedUser extends User {

@@ -6,7 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { LoadingButton } from "@mui/lab";
-import { IconButton, InputAdornment } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -14,29 +21,54 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { userInfo } from "os";
+import { useEffect, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 interface UserFormProps {
   id?: string;
   userInfos?: CompletedUser;
   successufulUpdate?: () => void;
+  allowDelete?: boolean;
+  isAdmin?: boolean;
 }
 
 export default function UserForm({
   id = "",
   userInfos,
   successufulUpdate = () => {},
+  allowDelete = false,
+  isAdmin = false,
 }: UserFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
 
+  function handleDeleteUser() {
+    setLoading(true);
+    UserController.deleteUser(id)
+      .then(() => {
+        toast.success("Usuário excluído com sucesso");
+        router.push("/login");
+      })
+      .catch((error) => {
+        toast.error("Não foi possível excluir o usuário");
+      })
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    if (id !== "") {
+      reset(userInfos);
+    }
+  }, [id, userInfos]);
+
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<User>({
     resolver: zodResolver(ZUserSchema),
@@ -44,6 +76,7 @@ export default function UserForm({
       name: !id ? "" : userInfos?.name,
       email: !id ? "" : userInfos?.email,
       password: !id ? "" : userInfos?.password,
+      isAdmin: "false",
     },
   });
 
@@ -107,6 +140,7 @@ export default function UserForm({
               id="name"
               label="Nome"
               autoFocus
+              InputLabelProps={{ shrink: !!id }}
               error={!!errors.name}
               helperText={errors.name?.message}
               {...register("name")}
@@ -119,6 +153,7 @@ export default function UserForm({
               fullWidth
               id="email"
               label="Email"
+              InputLabelProps={{ shrink: !!id }}
               error={!!errors.email}
               helperText={errors.email?.message}
               {...register("email")}
@@ -130,6 +165,7 @@ export default function UserForm({
               fullWidth
               label="Senha"
               id="password"
+              InputLabelProps={{ shrink: !!id }}
               error={!!errors.password}
               helperText={errors.password?.message}
               {...register("password")}
@@ -150,16 +186,58 @@ export default function UserForm({
               }}
             />
           </Grid>
+          {isAdmin && (
+            <Grid item xs={12}>
+              <FormControl>
+                <Controller
+                  name="isAdmin"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup {...field}>
+                      <FormControlLabel
+                        value="false"
+                        control={<Radio />}
+                        label="Não"
+                      />
+                      <FormControlLabel
+                        value="true"
+                        control={<Radio />}
+                        label="Sim"
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </FormControl>
+            </Grid>
+          )}
         </Grid>
-        <LoadingButton
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          loading={loading}
-        >
-          {!id ? "Cadastrar" : "Atualizar"}
-        </LoadingButton>
+        <Grid container columnSpacing={3} justifyContent="center">
+          {allowDelete && (
+            <Grid item xs={4}>
+              <LoadingButton
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                loading={loading}
+                color="inherit"
+                onClick={handleDeleteUser}
+              >
+                Excluir
+              </LoadingButton>
+            </Grid>
+          )}
+          <Grid item xs={allowDelete ? 4 : 12}>
+            <LoadingButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              loading={loading}
+            >
+              {!id ? "Cadastrar" : "Atualizar"}
+            </LoadingButton>
+          </Grid>
+        </Grid>
         {!id && (
           <Grid container justifyContent="flex-end">
             <Grid item>

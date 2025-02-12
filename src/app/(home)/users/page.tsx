@@ -56,6 +56,7 @@ export default function Users() {
   ];
   const [users, setUsers] = useState<TableUser[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [openEditUser, setOpenEditUser] = useState<boolean>(false);
   const [userToBeEdited, setUserToBeEdited] = useState<string>("");
   const session = useSession();
@@ -98,9 +99,14 @@ export default function Users() {
 
   useEffect(() => {
     if (session.data?.user.id) {
-      UserController.isAdmin(session.data?.user.id).then((response) =>
-        response ? router.replace("/") : handleGetUsers()
-      );
+      UserController.isAdmin(session.data?.user.id).then((response) => {
+        if (!response) {
+          router.replace("/");
+        } else {
+          setIsAdmin(true);
+          handleGetUsers();
+        }
+      });
     }
   }, [session]);
 

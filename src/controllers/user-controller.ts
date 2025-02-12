@@ -48,7 +48,14 @@ async function update(id: string, user: User) {
 async function get(id: string) {
   try {
     const response = await getUser(id);
-    return response;
+    if (response)
+      return {
+        id: response.id ?? "",
+        name: response.name ?? "",
+        email: response.email ?? "",
+        password: response.password ?? "",
+        isAdmin: response?.isAdmin ? "true" : "false",
+      };
   } catch (error) {
     throw error;
   }

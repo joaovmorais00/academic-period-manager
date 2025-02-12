@@ -127,13 +127,13 @@ export default function TestForm({
     )
       .then(() => {
         reset();
-        toast.success("Prova cadastrada com sucesso");
+        toast.success("Atividade avaliativa cadastrada com sucesso");
         successfulCreateEvent();
         setLoading(false);
       })
       .catch(() => {
         setLoading(false);
-        toast.error("Houve um erro ao cadastrar a aula");
+        toast.error("Houve um erro ao cadastrar a atividade avaliativa");
       });
 
     setLoading(false);
@@ -172,7 +172,7 @@ export default function TestForm({
         <Grid item container xs={12} rowSpacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6" className="mb-3">
-              Provas
+              Atividades avaliativas
             </Typography>
           </Grid>
           <Grid item container xs={11} rowSpacing={3}>

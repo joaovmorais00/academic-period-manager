@@ -16,4 +16,5 @@ export const ZUserSchema = z.object({
       required_error: "Senha é obrigatória.",
     })
     .min(8, { message: "Senha deve conter no mínimo 8 caracteres" }),
+  isAdmin: z.string().optional(),
 });

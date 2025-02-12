@@ -16,7 +16,6 @@ dayjs.locale("pt-br");
 
 export default function EventPopover({ event, onClose, anchorEl }: Props) {
   const getComponent = (eventType: string) => {
-    console.log(eventType, "teste tipo");
     switch (eventType) {
       case "CLASS":
       case "STUDY_TIME":

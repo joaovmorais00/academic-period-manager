@@ -30,7 +30,6 @@ export default function ShowMoreSubjectsDialog({
 
   useEffect(() => {
     SubjectController.get(subjectId).then((response) => {
-      console.log(response, "response chegand0");
       setSubject(response);
     });
   }, [subjectId]);

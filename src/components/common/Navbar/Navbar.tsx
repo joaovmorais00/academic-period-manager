@@ -2,6 +2,7 @@
 import UserController from "@/controllers/user-controller";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import TopicIcon from "@mui/icons-material/Topic";
@@ -30,9 +31,14 @@ interface itemMenu {
 
 const itemsMenuStudent: itemMenu[] = [
   {
-    name: "Home",
+    name: "Início",
     link: "/",
     icon: <HomeIcon />,
+  },
+  {
+    name: "Meus Dados",
+    link: "/user",
+    icon: <PersonIcon />,
   },
   {
     name: "Agenda",
@@ -55,7 +61,7 @@ const itemsMenuAdmin: itemMenu[] = [
   {
     name: "Usuários",
     link: "/users",
-    icon: <PersonIcon />,
+    icon: <PeopleIcon />,
   },
 ];
 
