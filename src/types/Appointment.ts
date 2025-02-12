@@ -1,5 +1,4 @@
 export interface Appointment {
-  name?: string | null;
   startDate: string;
   endDate: string;
   daysOfWeek: string[];
@@ -13,7 +12,6 @@ export interface AppointmentWithId extends Appointment {
 
 export interface ModelAppointment {
   createdByUserId: string;
-  name?: string;
   startDateTime: Date;
   endDateTime: Date;
   dayOfWeek?: number;

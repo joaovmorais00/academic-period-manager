@@ -49,3 +49,13 @@ export async function getExtraActivityById(id: string) {
     },
   });
 }
+
+export async function deleteExtraActivity(id: string) {
+  return await prismaClient.extraActivity.delete({ where: { id } });
+}
+
+export async function getAllExtraActivitiesByUserId(id: string) {
+  return await prismaClient.extraActivity.findMany({
+    where: { createdByUserId: id },
+  });
+}

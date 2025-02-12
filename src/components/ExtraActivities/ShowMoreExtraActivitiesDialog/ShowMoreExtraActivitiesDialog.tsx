@@ -1,5 +1,8 @@
 "use client";
 
+import ExtraActivityController from "@/controllers/extra-activity-controller";
+import { ExtraActivity } from "@/types/ExtraActivity";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
   DialogContent,
@@ -8,32 +11,28 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import styles from "./styles.module.css";
-import SubjectController from "@/controllers/subject-controller";
-import { Subject } from "@/types/Subject";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import styles from "./styles.module.css";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  subjectId: string;
+  extraActivityId: string;
 }
 
-export default function ShowMoreSubjectsDialog({
+export default function ShowMoreExtraActivitiesDialog({
   open,
   handleClose,
-  subjectId,
+  extraActivityId,
 }: Props) {
-  const [subject, setSubject] = useState<Subject>({ title: "", teacher: "" });
+  const [extraActivity, setExtraActivity] = useState<ExtraActivity>({});
 
   useEffect(() => {
-    SubjectController.get(subjectId).then((response) => {
-      console.log(response, "response chegand0");
-      setSubject(response);
-    });
-  }, [subjectId]);
+    ExtraActivityController.get(extraActivityId).then((response) =>
+      setExtraActivity(response)
+    );
+  }, [extraActivityId]);
 
   const getTypeTestTitle = (keyTypeTest: string) => {
     switch (keyTypeTest) {
@@ -55,7 +54,7 @@ export default function ShowMoreSubjectsDialog({
       <DialogTitle>
         <div className={styles.headerDiv}>
           <div>
-            <Typography variant="h4">Disciplina</Typography>
+            <Typography variant="h4">Atividade Extra</Typography>
           </div>
           <div>
             <IconButton aria-label="delete" size="large" onClick={handleClose}>
@@ -65,32 +64,34 @@ export default function ShowMoreSubjectsDialog({
         </div>
       </DialogTitle>
       <DialogContent>
-        {Object.keys(subject).length > 0 && (
+        {Object.keys(extraActivity).length > 0 && (
           <Grid container rowSpacing={3}>
             <Grid item xs={12} columnSpacing={1} className={styles.infoRow}>
               <div>
                 <Typography variant="h6">Título:</Typography>
               </div>
-              <div>{subject?.title}</div>
+              <div>{extraActivity?.title}</div>
             </Grid>
 
-            <Grid item xs={12} columnSpacing={1} className={styles.infoRow}>
-              <div>
-                <Typography variant="h6"> Professor:</Typography>
-              </div>
-              <div>{subject?.teacher}</div>
-            </Grid>
-
-            {subject?.description && (
+            {extraActivity.notes && (
               <Grid item xs={12} columnSpacing={1} className={styles.infoRow}>
                 <div>
-                  <Typography variant="h6">Descrição:</Typography>
+                  <Typography variant="h6"> Anotações:</Typography>
                 </div>
-                <div>{subject?.description}</div>
+                <div>{extraActivity?.notes}</div>
               </Grid>
             )}
 
-            {subject.classes && subject.classes.length > 0 && (
+            {extraActivity?.link && (
+              <Grid item xs={12} columnSpacing={1} className={styles.infoRow}>
+                <div>
+                  <Typography variant="h6">Link:</Typography>
+                </div>
+                <a href={extraActivity?.link} />
+              </Grid>
+            )}
+
+            {extraActivity.classes && extraActivity.classes.length > 0 && (
               <Grid item container>
                 <Grid>
                   <Typography variant="h6">Aulas:</Typography>
@@ -101,8 +102,8 @@ export default function ShowMoreSubjectsDialog({
                   sx={{ marginTop: "0.1rem" }}
                   rowSpacing={1}
                 >
-                  {subject.classes.map((classItem, index) => (
-                    <Grid key={index} item container xs={12}>
+                  {extraActivity.classes.map((classItem) => (
+                    <Grid item container xs={12}>
                       <Grid
                         item
                         container
@@ -158,75 +159,78 @@ export default function ShowMoreSubjectsDialog({
               </Grid>
             )}
 
-            {subject.studyTimes && subject.studyTimes.length > 0 && (
-              <Grid item container>
-                <Grid>
-                  <Typography variant="h6">Horários de estudo:</Typography>
-                </Grid>
-                <Grid
-                  item
-                  container
-                  sx={{ marginTop: "0.1rem" }}
-                  rowSpacing={1}
-                >
-                  {subject.studyTimes.map((studyTime, index) => (
-                    <Grid key={index} item container xs={12}>
-                      <Grid
-                        item
-                        container
-                        xs={3}
-                        columnSpacing={1}
-                        className={styles.classRow}
-                      >
-                        <Grid item xs={5}>
-                          <Typography variant="subtitle1">
-                            Dia das aulas:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                          {studyTime.daysOfWeek[0]}
-                        </Grid>
-                      </Grid>{" "}
-                      <Grid
-                        item
-                        container
-                        xs={5}
-                        columnSpacing={1}
-                        className={styles.classRow}
-                      >
-                        <Grid item xs={5}>
-                          <Typography variant="subtitle1">
-                            Datas de início e término:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={5}>{`${dayjs(studyTime.startDate).format(
-                          "DD-MM-YY"
-                        )} à ${dayjs(studyTime.endDate).format(
-                          "DD-MM-YY"
-                        )}  `}</Grid>
-                      </Grid>{" "}
-                      <Grid
-                        item
-                        container
-                        xs={3}
-                        columnSpacing={1}
-                        className={styles.classRow}
-                      >
-                        <Grid item xs={3}>
-                          <Typography variant="subtitle1">Horário:</Typography>
-                        </Grid>
+            {extraActivity.studyTimes &&
+              extraActivity.studyTimes.length > 0 && (
+                <Grid item container>
+                  <Grid>
+                    <Typography variant="h6">Horários de estudo:</Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    sx={{ marginTop: "0.1rem" }}
+                    rowSpacing={1}
+                  >
+                    {extraActivity.studyTimes.map((studyTime) => (
+                      <Grid item container xs={12}>
                         <Grid
                           item
-                          xs={9}
-                        >{`${studyTime.startTime} à ${studyTime.endTime}`}</Grid>
+                          container
+                          xs={3}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Grid item xs={5}>
+                            <Typography variant="subtitle1">
+                              Dia das aulas:
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            {studyTime.daysOfWeek[0]}
+                          </Grid>
+                        </Grid>{" "}
+                        <Grid
+                          item
+                          container
+                          xs={5}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Grid item xs={5}>
+                            <Typography variant="subtitle1">
+                              Datas de início e término:
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={5}>{`${dayjs(
+                            studyTime.startDate
+                          ).format("DD-MM-YY")} à ${dayjs(
+                            studyTime.endDate
+                          ).format("DD-MM-YY")}  `}</Grid>
+                        </Grid>{" "}
+                        <Grid
+                          item
+                          container
+                          xs={3}
+                          columnSpacing={1}
+                          className={styles.classRow}
+                        >
+                          <Grid item xs={3}>
+                            <Typography variant="subtitle1">
+                              Horário:
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={9}
+                          >{`${studyTime.startTime} à ${studyTime.endTime}`}</Grid>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  ))}
+                    ))}
+                  </Grid>
                 </Grid>
-              </Grid>
-            )}
+              )}
 
-            {subject.tests && subject.tests.length > 0 && (
+            {extraActivity.tests && extraActivity.tests.length > 0 && (
               <Grid item container sx={{ marginTop: "1rem" }}>
                 <Grid>
                   <Typography variant="h5">Atividades avaliativas:</Typography>
@@ -237,8 +241,8 @@ export default function ShowMoreSubjectsDialog({
                   sx={{ marginTop: "0.1rem" }}
                   rowSpacing={4}
                 >
-                  {subject.tests.map((test, index) => (
-                    <Grid key={index} item container xs={12}>
+                  {extraActivity.tests.map((test) => (
+                    <Grid item container xs={12}>
                       <Grid
                         item
                         xs={3}

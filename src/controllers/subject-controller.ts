@@ -18,17 +18,39 @@ import TestController from "./test-controller";
 async function create(subject: Subject, userId: string) {
   try {
     const createdSubject = await createSubject(subject, userId);
-    await AppointmentController.createManyAppointments(
-      subject.classes ?? [],
-      userId,
-      createdSubject.id,
-      "CLASS"
-    );
-    await TestController.createManyTests(
-      subject.tests ?? [],
-      userId,
-      createdSubject.id
-    );
+    const auxSubject = {
+      tests: subject.tests?.filter(
+        ({ topic, typeTest }) => topic !== "" && typeTest !== ""
+      ),
+      classes: subject.classes?.filter(
+        ({ startDate, endDate }) => startDate !== "" && endDate !== ""
+      ),
+      studyTimes: subject.studyTimes?.filter(
+        ({ startDate, endDate }) => startDate !== "" && endDate !== ""
+      ),
+      ...subject,
+    };
+    if (auxSubject.classes && auxSubject.classes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        auxSubject.classes,
+        userId,
+        createdSubject.id,
+        "CLASS"
+      );
+    if (auxSubject.tests && auxSubject.tests?.length > 0)
+      await TestController.createManyTests(
+        auxSubject.tests,
+        userId,
+        createdSubject.id
+      );
+
+    if (auxSubject.studyTimes && auxSubject.studyTimes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        auxSubject.studyTimes,
+        userId,
+        createdSubject.id,
+        "STUDY_TIME"
+      );
 
     return true;
   } catch (error) {
@@ -119,30 +141,28 @@ async function update(
   await updateSubject(subject, userId);
   if (updateClasses) {
     await AppointmentController.deleteAllClasses(subject.id);
-
-    await AppointmentController.createManyAppointments(
-      subject.classes ?? [],
-      userId,
-      subject.id,
-      "CLASS"
-    );
+    if (subject.classes && subject.classes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        subject.classes,
+        userId,
+        subject.id,
+        "CLASS"
+      );
   }
   if (updateTests) {
     await TestController.deleteAllSubjectTests(subject.id);
-    await TestController.createManyTests(
-      subject.tests ?? [],
-      userId,
-      subject.id
-    );
+    if (subject.tests && subject.tests?.length > 0)
+      await TestController.createManyTests(subject.tests, userId, subject.id);
   }
   if (updateStudyTimes) {
     await AppointmentController.deleteAllStudyTimes(subject.id);
-    await AppointmentController.createManyAppointments(
-      subject.classes ?? [],
-      userId,
-      subject.id,
-      "STUDY_TIME"
-    );
+    if (subject.studyTimes && subject.studyTimes?.length > 0)
+      await AppointmentController.createManyAppointments(
+        subject.studyTimes,
+        userId,
+        subject.id,
+        "STUDY_TIME"
+      );
   }
   return true;
 }

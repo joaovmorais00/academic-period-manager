@@ -10,3 +10,5 @@ export interface ExtraActivity {
 export interface ExtraActivityWithId extends ExtraActivity {
   id: string;
 }
+
+export type TableExtraActivity = Pick<ExtraActivityWithId, "id" | "title">;

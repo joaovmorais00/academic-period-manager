@@ -1,9 +1,15 @@
 import {
   createExtraActivity,
+  deleteExtraActivity,
+  getAllExtraActivitiesByUserId,
   getExtraActivityById,
   updateExtraActivity,
 } from "@/services/extra-activity-service";
-import { ExtraActivity, ExtraActivityWithId } from "@/types/ExtraActivity";
+import {
+  ExtraActivity,
+  ExtraActivityWithId,
+  TableExtraActivity,
+} from "@/types/ExtraActivity";
 import AppointmentController from "./appointment-controller";
 import { AppointmentWithId } from "@/types/Appointment";
 import DaysOfWeek from "@/utils/DaysOfWeek";
@@ -83,6 +89,22 @@ async function get(id: string) {
   return extraActivity;
 }
 
-const ExtraActivityController = { create, update, get };
+async function remove(id: string) {
+  return await deleteExtraActivity(id);
+}
+
+async function getAllByUserId(userId: string) {
+  const response = await getAllExtraActivitiesByUserId(userId);
+  const extraActivities: TableExtraActivity[] = response.map(
+    ({ id, title }) =>
+      ({
+        id,
+        title,
+      } as TableExtraActivity)
+  );
+  return extraActivities;
+}
+
+const ExtraActivityController = { create, update, get, remove, getAllByUserId };
 
 export default ExtraActivityController;
