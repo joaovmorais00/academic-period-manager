@@ -62,10 +62,7 @@ export default function CreateEventButton({ handleSelectTypeEvent }: Props) {
           Horário de Estudo
         </MenuItem>
         <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
-          Reunião
-        </MenuItem>
-        <MenuItem sx={{ minWidth: " 10rem" }} onClick={() => {}}>
-          Atividade Complementar
+          Atividade Extra
         </MenuItem>
       </Menu>
     </>

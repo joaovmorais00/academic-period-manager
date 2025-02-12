@@ -1,9 +1,9 @@
 "use client";
-import SubjectController from "@/controllers/subject-controller";
 import styles from "./styles.module.css";
 
-import { Appointment, SchedulerClasses } from "@/types/Appointment";
-import { ZSchedulerClassSchema } from "@/utils/zod/appointment-schema";
+import ExtraActivityController from "@/controllers/extra-activity-controller";
+import { ExtraActivity } from "@/types/ExtraActivity";
+import { ZExtraActivitySchema } from "@/utils/zod/extra-activity-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -33,20 +33,19 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "react-toastify";
-import { TableSubject } from "@/types/Subject";
-import AppointmentController from "@/controllers/appointment-controller";
 
-interface ClassFormProps {
+interface ExtraActivityFormProps {
+  id?: string;
   successfulCreateEvent?: () => void;
 }
 
-export default function SchedulerClassForm({
+export default function ExtraActivityForm({
+  id = "",
   successfulCreateEvent = () => {},
-}: ClassFormProps) {
+}: ExtraActivityFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const session = useSession();
   const router = useRouter();
-  const [subjects, setSubjects] = useState<TableSubject[]>([]);
 
   const daysOfWeek = [
     "Domingo",
@@ -59,18 +58,12 @@ export default function SchedulerClassForm({
   ];
 
   useEffect(() => {
-    if (session.data?.user.id) handleGetSubjects();
-  }, [session]);
-
-  function handleGetSubjects() {
-    setLoading(true);
-    SubjectController.getAllByUserId(session.data?.user.id ?? "").then(
-      (response) => {
-        setSubjects(response);
-      }
-    );
-    setLoading(false);
-  }
+    if (id !== "") {
+      ExtraActivityController.get(id).then((response) => {
+        reset(response);
+      });
+    }
+  }, [id]);
 
   const {
     register,
@@ -78,10 +71,14 @@ export default function SchedulerClassForm({
     control,
     reset,
     formState: { errors },
-  } = useForm<SchedulerClasses>({
-    resolver: zodResolver(ZSchedulerClassSchema),
+    getFieldState,
+  } = useForm<ExtraActivity>({
+    resolver: zodResolver(ZExtraActivitySchema),
     defaultValues: {
-      classes: [
+      title: "",
+      notes: "",
+      link: "",
+      workSchedules: [
         {
           daysOfWeek: [],
           startDate: "",
@@ -90,91 +87,124 @@ export default function SchedulerClassForm({
           endTime: "",
         },
       ],
-      subjectId: "",
     },
   });
 
   const {
-    fields: classesDates,
-    append: appendClassesDates,
-    remove: removeClassesDates,
+    fields: workSchedulesDates,
+    append: appendWorkSchedulesDates,
+    remove: removeWorkSchedulesDates,
   } = useFieldArray({
     control,
-    name: "classes",
+    name: "workSchedules",
   });
 
-  const onSubmit: SubmitHandler<SchedulerClasses> = ({
-    classes,
-    subjectId,
-  }) => {
+  const onSubmit: SubmitHandler<ExtraActivity> = (data) => {
     setLoading(true);
-
-    AppointmentController.createManyAppointments(
-      classes,
-      session.data?.user?.id ?? "",
-      subjectId,
-      "CLASS"
-    )
-      .then(() => {
-        reset();
-        toast.success("Aula cadastrada com sucesso");
-        successfulCreateEvent();
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        toast.error("Houve um erro ao cadastrar a aula");
-      });
-
+    const extraActivity: ExtraActivity = { ...data };
+    if (!id) {
+      ExtraActivityController.create(
+        extraActivity,
+        session.data?.user?.id ?? ""
+      )
+        .then((response) => {
+          reset();
+          toast.success("Atividade extra cadastrada com sucesso");
+          successfulCreateEvent();
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error("Houve um erro ao cadastrar a atividade extra");
+        });
+    } else {
+      ExtraActivityController.update(
+        { id, ...extraActivity },
+        session.data?.user?.id ?? "",
+        getFieldState("workSchedules").isDirty
+      )
+        .then((response) => {
+          toast.success("Atividade extra atualizada com sucesso");
+          router.push("/subjects");
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error("Houve um erro ao atualizar a atividade extra");
+        });
+    }
     setLoading(false);
   };
 
-  const onError = (errors: FieldErrors<SchedulerClasses>) => {
+  const onError = (errors: FieldErrors<ExtraActivity>) => {
     console.log("Erros de validação:", errors);
   };
 
   return (
     <Box component="form" noValidate onSubmit={handleSubmit(onSubmit, onError)}>
       <Grid container rowSpacing={3}>
-        <Grid item xs={6}>
-          <Controller
-            name={`subjectId`}
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth>
-                <InputLabel id="subject">Disciplina</InputLabel>
-                <Select
-                  {...field}
-                  labelId="subject"
-                  label="subject"
-                  input={<OutlinedInput label="Disciplina" />}
-                >
-                  {subjects.map(({ id, title }: TableSubject) => (
-                    <MenuItem value={id} key={id}>
-                      {title}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
+        <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            id="title"
+            label="Título da Disciplina"
+            InputLabelProps={{ shrink: true }}
+            autoFocus
+            error={!!errors.title}
+            helperText={errors.title?.message}
+            {...register("title")}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            id="notes"
+            multiline
+            label="Anotações"
+            InputLabelProps={{ shrink: true }}
+            error={!!errors.notes}
+            helperText={errors.notes?.message}
+            {...register("notes")}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            id="link"
+            label="Link"
+            InputLabelProps={{ shrink: true }}
+            error={!!errors.link}
+            helperText={errors.link?.message}
+            {...register("link")}
           />
         </Grid>
         <Grid item container xs={12} rowSpacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6" className="mb-3">
-              Aulas
+              {!id ? "Cadastro de " : ""}Horários
             </Typography>
           </Grid>
-          <Grid item container xs={11} rowSpacing={1}>
-            {classesDates.map((field, index) => (
-              <Grid item container key={field.id} xs={12} columnSpacing={1}>
-                {classesDates.length > 1 && (
+          <Grid item container xs={11} rowSpacing={3}>
+            {workSchedulesDates.map((field, index) => (
+              <Grid
+                item
+                container
+                key={field.id}
+                xs={12}
+                columnSpacing={1}
+                rowSpacing={1}
+              >
+                {workSchedulesDates.length > 1 && (
                   <Grid item xs={1}>
                     <IconButton
                       color="error"
                       aria-label="add"
                       size="large"
-                      onClick={() => removeClassesDates(index)}
+                      onClick={() => removeWorkSchedulesDates(index)}
                     >
                       <RemoveIcon fontSize="large" />
                     </IconButton>
@@ -185,11 +215,13 @@ export default function SchedulerClassForm({
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.startDate`}
+                    id={`workSchedules.${index}.startDate`}
                     label="Data de início"
-                    error={!!errors.classes?.[index]?.startDate}
-                    helperText={errors.classes?.[index]?.startDate?.message}
-                    {...register(`classes.${index}.startDate`)}
+                    error={!!errors.workSchedules?.[index]?.startDate}
+                    helperText={
+                      errors.workSchedules?.[index]?.startDate?.message
+                    }
+                    {...register(`workSchedules.${index}.startDate`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -197,11 +229,11 @@ export default function SchedulerClassForm({
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.endDate`}
+                    id={`workSchedules.${index}.endDate`}
                     label="Data de término"
-                    error={!!errors.classes?.[index]?.endDate}
-                    helperText={errors.classes?.[index]?.endDate?.message}
-                    {...register(`classes.${index}.endDate`)}
+                    error={!!errors.workSchedules?.[index]?.endDate}
+                    helperText={errors.workSchedules?.[index]?.endDate?.message}
+                    {...register(`workSchedules.${index}.endDate`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -209,11 +241,13 @@ export default function SchedulerClassForm({
                     type="time"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.startTime`}
+                    id={`workSchedules.${index}.startTime`}
                     label="Horário de início"
-                    error={!!errors.classes?.[index]?.startTime}
-                    helperText={errors.classes?.[index]?.startTime?.message}
-                    {...register(`classes.${index}.startTime`)}
+                    error={!!errors.workSchedules?.[index]?.startTime}
+                    helperText={
+                      errors.workSchedules?.[index]?.startTime?.message
+                    }
+                    {...register(`workSchedules.${index}.startTime`)}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -221,16 +255,16 @@ export default function SchedulerClassForm({
                     type="time"
                     InputLabelProps={{ shrink: true }}
                     fullWidth
-                    id={`classes.${index}.endTime`}
+                    id={`workSchedules.${index}.endTime`}
                     label="Horário de término"
-                    error={!!errors.classes?.[index]?.endTime}
-                    helperText={errors.classes?.[index]?.endTime?.message}
-                    {...register(`classes.${index}.endTime`)}
+                    error={!!errors.workSchedules?.[index]?.endTime}
+                    helperText={errors.workSchedules?.[index]?.endTime?.message}
+                    {...register(`workSchedules.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={classesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={workSchedulesDates.length > 1 ? 3 : 4}>
                   <Controller
-                    name={`classes.${index}.daysOfWeek`}
+                    name={`workSchedules.${index}.daysOfWeek`}
                     control={control}
                     render={({ field }) => (
                       <FormControl fullWidth>
@@ -265,7 +299,7 @@ export default function SchedulerClassForm({
               aria-label="add"
               size="large"
               onClick={() =>
-                appendClassesDates({
+                appendWorkSchedulesDates({
                   startDate: "",
                   endDate: "",
                   startTime: "",
@@ -286,7 +320,7 @@ export default function SchedulerClassForm({
         sx={{ mt: 3, mb: 2 }}
         loading={loading}
       >
-        {"Cadastrar"}
+        {!id ? "Cadastrar" : "Atualizar"}
       </LoadingButton>
     </Box>
   );

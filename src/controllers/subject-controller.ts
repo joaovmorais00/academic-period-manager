@@ -18,10 +18,11 @@ import TestController from "./test-controller";
 async function create(subject: Subject, userId: string) {
   try {
     const createdSubject = await createSubject(subject, userId);
-    await AppointmentController.createManyClasses(
+    await AppointmentController.createManyAppointments(
       subject.classes ?? [],
       userId,
-      createdSubject.id
+      createdSubject.id,
+      "CLASS"
     );
     await TestController.createManyTests(
       subject.tests ?? [],
@@ -38,28 +39,23 @@ async function create(subject: Subject, userId: string) {
 
 async function get(id: string) {
   const response = await getSubjectById(id);
-  const classes = response?.classesAndStudyTimes.reduce(
-    (
-      acc: AppointmentWithId[],
-      { id, name, startDateTime, endDateTime, dayOfWeek, type }
-    ) => {
-      if (type === "CLASS") {
-        acc.push({
-          id,
-          name,
-          daysOfWeek: dayOfWeek
-            ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)]
-            : [],
-          startDate: Dates.DateTimeToStringDate(startDateTime),
-          endDate: Dates.DateTimeToStringDate(endDateTime),
-          startTime: Dates.DateTimeToStringTime(startDateTime),
-          endTime: Dates.DateTimeToStringTime(endDateTime),
-        });
-      }
-      return acc;
-    },
-    []
+  const classes: AppointmentWithId[] = [];
+  const studyTimes: AppointmentWithId[] = [];
+  response?.classesAndStudyTimes.map(
+    ({ id, startDateTime, endDateTime, dayOfWeek, type }) => {
+      const appointment = {
+        id,
+        daysOfWeek: dayOfWeek ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)] : [],
+        startDate: Dates.DateTimeToStringDate(startDateTime),
+        endDate: Dates.DateTimeToStringDate(endDateTime),
+        startTime: Dates.DateTimeToStringTime(startDateTime),
+        endTime: Dates.DateTimeToStringTime(endDateTime),
+      };
+      if (type === "CLASS") classes.push(appointment);
+      if (type === "STUDY_TIME") studyTimes.push(appointment);
+    }
   );
+
   const tests = response?.tests.map(
     ({
       id,
@@ -81,7 +77,7 @@ async function get(id: string) {
       score: score?.toString(),
       worth: worth?.toString(),
       link: link ?? "",
-      typeTest: type ?? "test",
+      typeTest: type ?? "TEST",
     })
   );
   const subject = {
@@ -90,6 +86,7 @@ async function get(id: string) {
     teacher: !response?.teacher ? "" : response.teacher,
     description: !response?.description ? "" : response.description,
     classes,
+    studyTimes,
     tests,
   };
   return subject;
@@ -123,10 +120,11 @@ async function update(
   if (updateClasses) {
     await AppointmentController.deleteAllClasses(subject.id);
 
-    await AppointmentController.createManyClasses(
+    await AppointmentController.createManyAppointments(
       subject.classes ?? [],
       userId,
-      subject.id
+      subject.id,
+      "CLASS"
     );
   }
   if (updateTests) {
@@ -139,10 +137,11 @@ async function update(
   }
   if (updateStudyTimes) {
     await AppointmentController.deleteAllStudyTimes(subject.id);
-    await AppointmentController.createManyStudyTimes(
+    await AppointmentController.createManyAppointments(
       subject.classes ?? [],
       userId,
-      subject.id
+      subject.id,
+      "STUDY_TIME"
     );
   }
   return true;
@@ -201,7 +200,7 @@ async function getAllEventsByUserId(userId: string) {
         backgroundColor: "blue",
         textColor: "white",
         infos: {
-          eventType: "test",
+          eventType: "TEST",
           teacher: subject.teacher,
           topic: test.topic,
           notes: test.notes,

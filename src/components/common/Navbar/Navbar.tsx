@@ -1,11 +1,9 @@
 "use client";
 import UserController from "@/controllers/user-controller";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import BookIcon from "@mui/icons-material/Book";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import GroupsIcon from "@mui/icons-material/Groups";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import TopicIcon from "@mui/icons-material/Topic";
 import styles from "./styles.module.css";
 
@@ -47,19 +45,9 @@ const itemsMenuStudent: itemMenu[] = [
     icon: <TopicIcon />,
   },
   {
-    name: "Reuniões",
+    name: "Atividades Extra",
     link: "/",
-    icon: <GroupsIcon />,
-  },
-  {
-    name: "Horários de Estudo",
-    link: "/",
-    icon: <AutoStoriesIcon />,
-  },
-  {
-    name: "Atividades complementares",
-    link: "/",
-    icon: <BookIcon />,
+    icon: <PostAddIcon />,
   },
 ];
 

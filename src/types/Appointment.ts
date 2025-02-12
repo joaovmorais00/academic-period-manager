@@ -18,9 +18,10 @@ export interface ModelAppointment {
   endDateTime: Date;
   dayOfWeek?: number;
   subjectId?: string;
+  extraActivityId?: string;
   testId?: string;
   notes?: string;
-  type?: "CLASS" | "STUDY_TIME";
+  type: AppointmentType;
 }
 
 export interface SchedulerClasses {
@@ -32,3 +33,5 @@ export interface SchedulerStudyTimes {
   subjectId: string;
   studyTimes: Appointment[];
 }
+
+export type AppointmentType = "CLASS" | "STUDY_TIME" | "EXTRA";
