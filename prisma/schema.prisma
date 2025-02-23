@@ -44,6 +44,7 @@ model Appointment {
   testId          String?
   ExtraActivity   ExtraActivity? @relation(fields: [extraActivityId], references: [id])
   extraActivityId String?
+  local           String?
 }
 
 model Subject {
@@ -76,6 +77,7 @@ model Test {
   studyTimes      Appointment[]
   Subject         Subject?      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId       String?
+  local           String?
 }
 
 model ExtraActivity {

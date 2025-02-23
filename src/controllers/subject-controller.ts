@@ -64,7 +64,7 @@ async function get(id: string) {
   const classes: AppointmentWithId[] = [];
   const studyTimes: AppointmentWithId[] = [];
   response?.classesAndStudyTimes.map(
-    ({ id, startDateTime, endDateTime, dayOfWeek, type }) => {
+    ({ id, startDateTime, endDateTime, dayOfWeek, type, local }) => {
       const appointment = {
         id,
         daysOfWeek: dayOfWeek ? [DaysOfWeek.daysOfWeekToString(dayOfWeek)] : [],
@@ -72,6 +72,7 @@ async function get(id: string) {
         endDate: Dates.DateTimeToStringDate(endDateTime),
         startTime: Dates.DateTimeToStringTime(startDateTime),
         endTime: Dates.DateTimeToStringTime(endDateTime),
+        local: local ?? "",
       };
       if (type === "CLASS") classes.push(appointment);
       if (type === "STUDY_TIME") studyTimes.push(appointment);
@@ -89,6 +90,7 @@ async function get(id: string) {
       worth,
       link,
       type,
+      local,
     }) => ({
       id,
       topic: topic ?? "",
@@ -100,6 +102,7 @@ async function get(id: string) {
       worth: worth?.toString(),
       link: link ?? "",
       typeTest: type ?? "TEST",
+      local: local ?? "",
     })
   );
   const subject = {
@@ -207,6 +210,7 @@ async function getAllEventsByUserId(userId: string) {
               eventType: appointment.type,
               teacher: subject.teacher,
               description: subject.description,
+              local: appointment.local,
             },
           });
         }
@@ -227,6 +231,7 @@ async function getAllEventsByUserId(userId: string) {
           notes: test.notes,
           score: test.score,
           worth: test.worth,
+          local: test.local,
         },
       });
     });

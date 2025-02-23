@@ -34,6 +34,9 @@ export default function TestPopoverContent({ event }: Props) {
       {event?.extendedProps.infos?.score && (
         <Typography>Nota: {event?.extendedProps.infos?.score}</Typography>
       )}
+      {event?.extendedProps.infos?.local && (
+        <Typography>Local: {event?.extendedProps.infos?.local}</Typography>
+      )}
     </>
   );
 }

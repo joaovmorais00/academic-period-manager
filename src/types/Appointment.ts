@@ -4,6 +4,7 @@ export interface Appointment {
   daysOfWeek: string[];
   startTime: string;
   endTime: string;
+  local?: string;
 }
 
 export interface AppointmentWithId extends Appointment {
@@ -20,6 +21,7 @@ export interface ModelAppointment {
   testId?: string;
   notes?: string;
   type: AppointmentType;
+  local?: string;
 }
 
 export interface SchedulerClasses {

@@ -111,6 +111,7 @@ export default function SubjectForm({
           endDate: "",
           startTime: "",
           endTime: "",
+          local: "",
         },
       ],
       tests: [
@@ -124,6 +125,7 @@ export default function SubjectForm({
           worth: "",
           link: "",
           typeTest: "",
+          local: "",
         },
       ],
       studyTimes: [
@@ -133,6 +135,7 @@ export default function SubjectForm({
           endDate: "",
           startTime: "",
           endTime: "",
+          local: "",
         },
       ],
     },
@@ -298,7 +301,7 @@ export default function SubjectForm({
                     {...register(`classes.${index}.endDate`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -310,7 +313,7 @@ export default function SubjectForm({
                     {...register(`classes.${index}.startTime`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -322,7 +325,7 @@ export default function SubjectForm({
                     {...register(`classes.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={classesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={3}>
                   <Controller
                     name={`classes.${index}.daysOfWeek`}
                     control={control}
@@ -350,6 +353,18 @@ export default function SubjectForm({
                     )}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    fullWidth
+                    id={`classes.${index}.local`}
+                    label="Local"
+                    InputLabelProps={{ shrink: true }}
+                    autoFocus
+                    error={!!errors.classes?.[index]?.local}
+                    helperText={errors.classes?.[index]?.local?.message}
+                    {...register(`classes.${index}.local`)}
+                  />
+                </Grid>
               </Grid>
             ))}
           </Grid>
@@ -364,6 +379,7 @@ export default function SubjectForm({
                   endDate: "",
                   startTime: "",
                   endTime: "",
+                  local: "",
                   daysOfWeek: [],
                 })
               }
@@ -439,7 +455,7 @@ export default function SubjectForm({
                     />
                   </Grid>
 
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <TextField
                       type="time"
                       InputLabelProps={{ shrink: true }}
@@ -451,7 +467,7 @@ export default function SubjectForm({
                       {...register(`tests.${index}.startTime`)}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <TextField
                       type="time"
                       InputLabelProps={{ shrink: true }}
@@ -463,7 +479,7 @@ export default function SubjectForm({
                       {...register(`tests.${index}.endTime`)}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <TextField
                       type="number"
                       InputLabelProps={{ shrink: true }}
@@ -475,7 +491,7 @@ export default function SubjectForm({
                       {...register(`tests.${index}.worth`)}
                     />
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={1}>
                     <TextField
                       type="number"
                       InputLabelProps={{ shrink: true }}
@@ -487,7 +503,30 @@ export default function SubjectForm({
                       {...register(`tests.${index}.score`)}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
+                    <TextField
+                      fullWidth
+                      id={`tests.${index}.local`}
+                      label="Local"
+                      InputLabelProps={{ shrink: true }}
+                      autoFocus
+                      error={!!errors.tests?.[index]?.local}
+                      helperText={errors.tests?.[index]?.local?.message}
+                      {...register(`tests.${index}.local`)}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      id={`tests.${index}.link`}
+                      label="Link"
+                      error={!!errors.tests?.[index]?.link}
+                      helperText={errors.tests?.[index]?.link?.message}
+                      {...register(`tests.${index}.link`)}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
                     <TextField
                       multiline
                       InputLabelProps={{ shrink: true }}
@@ -499,7 +538,7 @@ export default function SubjectForm({
                       {...register(`tests.${index}.topic`)}
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <TextField
                       multiline
                       InputLabelProps={{ shrink: true }}
@@ -509,17 +548,6 @@ export default function SubjectForm({
                       error={!!errors.tests?.[index]?.notes}
                       helperText={errors.tests?.[index]?.notes?.message}
                       {...register(`tests.${index}.notes`)}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      InputLabelProps={{ shrink: true }}
-                      fullWidth
-                      id={`tests.${index}.link`}
-                      label="Link"
-                      error={!!errors.tests?.[index]?.link}
-                      helperText={errors.tests?.[index]?.link?.message}
-                      {...register(`tests.${index}.link`)}
                     />
                   </Grid>
                 </Grid>
@@ -542,6 +570,7 @@ export default function SubjectForm({
                   worth: "",
                   link: "",
                   typeTest: "",
+                  local: "",
                 })
               }
             >
@@ -601,7 +630,7 @@ export default function SubjectForm({
                     {...register(`studyTimes.${index}.endDate`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -613,7 +642,7 @@ export default function SubjectForm({
                     {...register(`studyTimes.${index}.startTime`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -625,7 +654,7 @@ export default function SubjectForm({
                     {...register(`studyTimes.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={studyTimesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={3}>
                   <Controller
                     name={`studyTimes.${index}.daysOfWeek`}
                     control={control}
@@ -653,6 +682,17 @@ export default function SubjectForm({
                     )}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    id={`studyTimes.${index}.local`}
+                    label="Local"
+                    error={!!errors.studyTimes?.[index]?.local}
+                    helperText={errors.studyTimes?.[index]?.local?.message}
+                    {...register(`studyTimes.${index}.local`)}
+                  />
+                </Grid>
               </Grid>
             ))}
           </Grid>
@@ -667,6 +707,7 @@ export default function SubjectForm({
                   endDate: "",
                   startTime: "",
                   endTime: "",
+                  local: "",
                   daysOfWeek: [],
                 })
               }

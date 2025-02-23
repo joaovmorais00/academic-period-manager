@@ -85,6 +85,7 @@ export default function ExtraActivityForm({
           endDate: "",
           startTime: "",
           endTime: "",
+          local: "",
         },
       ],
     },
@@ -236,7 +237,7 @@ export default function ExtraActivityForm({
                     {...register(`workSchedules.${index}.endDate`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -250,7 +251,7 @@ export default function ExtraActivityForm({
                     {...register(`workSchedules.${index}.startTime`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -262,7 +263,7 @@ export default function ExtraActivityForm({
                     {...register(`workSchedules.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={workSchedulesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={3}>
                   <Controller
                     name={`workSchedules.${index}.daysOfWeek`}
                     control={control}
@@ -290,9 +291,22 @@ export default function ExtraActivityForm({
                     )}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    fullWidth
+                    id={`workSchedules.${index}.local`}
+                    label="Local"
+                    InputLabelProps={{ shrink: true }}
+                    autoFocus
+                    error={!!errors.workSchedules?.[index]?.local}
+                    helperText={errors.workSchedules?.[index]?.local?.message}
+                    {...register(`workSchedules.${index}.local`)}
+                  />
+                </Grid>
               </Grid>
             ))}
           </Grid>
+
           <Grid item xs={1} className={styles.addClassButtonContainer}>
             <IconButton
               color="primary"
@@ -305,6 +319,7 @@ export default function ExtraActivityForm({
                   startTime: "",
                   endTime: "",
                   daysOfWeek: [],
+                  local: "",
                 })
               }
             >

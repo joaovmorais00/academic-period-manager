@@ -32,6 +32,9 @@ export default function ExtraActivityPopoverContent({ event }: Props) {
           </a>
         </Typography>
       )}
+      {event?.extendedProps.infos?.local && (
+        <Typography>Local: {event?.extendedProps.infos?.local}</Typography>
+      )}
     </>
   );
 }

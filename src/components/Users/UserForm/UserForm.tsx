@@ -188,12 +188,13 @@ export default function UserForm({
           </Grid>
           {isAdmin && (
             <Grid item xs={12}>
+              <Typography variant="subtitle2">Administrador:</Typography>
               <FormControl>
                 <Controller
                   name="isAdmin"
                   control={control}
                   render={({ field }) => (
-                    <RadioGroup {...field}>
+                    <RadioGroup row {...field}>
                       <FormControlLabel
                         value="false"
                         control={<Radio />}

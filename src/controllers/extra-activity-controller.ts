@@ -62,7 +62,7 @@ async function get(id: string) {
   const workSchedules = response?.workSchedules.reduce(
     (
       acc: AppointmentWithId[],
-      { id, startDateTime, endDateTime, dayOfWeek, type }
+      { id, startDateTime, endDateTime, dayOfWeek, type, local }
     ) => {
       if (type === "EXTRA") {
         acc.push({
@@ -74,6 +74,7 @@ async function get(id: string) {
           endDate: Dates.DateTimeToStringDate(endDateTime),
           startTime: Dates.DateTimeToStringTime(startDateTime),
           endTime: Dates.DateTimeToStringTime(endDateTime),
+          local: local ?? "",
         });
       }
       return acc;
@@ -129,6 +130,7 @@ async function getAllEventsByUserId(userId: string) {
               eventType: appointment.type,
               notes: item.notes,
               link: item.link,
+              local: appointment.local,
             },
           });
         }

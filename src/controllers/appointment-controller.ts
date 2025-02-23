@@ -38,6 +38,7 @@ async function createManyAppointments(
         subjectId: type !== "EXTRA" ? objectId : undefined,
         extraActivityId: type === "EXTRA" ? objectId : undefined,
         type,
+        local: appointment.local,
       });
     })
   );

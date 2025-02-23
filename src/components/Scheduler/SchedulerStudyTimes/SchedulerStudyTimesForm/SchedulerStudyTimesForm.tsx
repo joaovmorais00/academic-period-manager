@@ -88,6 +88,7 @@ export default function SchedulerStudyTimesForm({
           endDate: "",
           startTime: "",
           endTime: "",
+          local: "",
         },
       ],
       subjectId: "",
@@ -211,7 +212,7 @@ export default function SchedulerStudyTimesForm({
                     {...register(`studyTimes.${index}.endDate`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -223,7 +224,7 @@ export default function SchedulerStudyTimesForm({
                     {...register(`studyTimes.${index}.startTime`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -235,7 +236,7 @@ export default function SchedulerStudyTimesForm({
                     {...register(`studyTimes.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={studyTimesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={3}>
                   <Controller
                     name={`studyTimes.${index}.daysOfWeek`}
                     control={control}
@@ -261,6 +262,18 @@ export default function SchedulerStudyTimesForm({
                         </Select>
                       </FormControl>
                     )}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    id={`studyTimes.${index}.local`}
+                    label="Local"
+                    InputLabelProps={{ shrink: true }}
+                    autoFocus
+                    error={!!errors.studyTimes?.[index]?.local}
+                    helperText={errors.studyTimes?.[index]?.local?.message}
+                    {...register(`studyTimes.${index}.local`)}
                   />
                 </Grid>
               </Grid>

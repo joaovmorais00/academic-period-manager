@@ -6,6 +6,7 @@ export const ZAppointmentSchema = z.object({
   daysOfWeek: z.string().array(),
   startTime: z.string(),
   endTime: z.string(),
+  local: z.string().optional(),
 });
 
 export const ZSchedulerClassSchema = z.object({

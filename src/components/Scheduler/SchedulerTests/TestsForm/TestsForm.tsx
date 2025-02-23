@@ -102,6 +102,7 @@ export default function TestForm({
           worth: "",
           link: "",
           typeTest: "",
+          local: "",
         },
       ],
       subjectId: "",
@@ -319,6 +320,18 @@ export default function TestForm({
                       {...register(`tests.${index}.link`)}
                     />
                   </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      fullWidth
+                      id={`tests.${index}.local`}
+                      label="Local"
+                      InputLabelProps={{ shrink: true }}
+                      autoFocus
+                      error={!!errors.tests?.[index]?.local}
+                      helperText={errors.tests?.[index]?.local?.message}
+                      {...register(`tests.${index}.local`)}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             ))}
@@ -339,6 +352,7 @@ export default function TestForm({
                   worth: "",
                   link: "",
                   typeTest: "",
+                  local: "",
                 })
               }
             >

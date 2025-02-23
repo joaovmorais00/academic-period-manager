@@ -27,6 +27,7 @@ async function createManyTests(
       ).toDate(),
       link: test.link,
       type: test.typeTest,
+      local: test.local,
     }));
     return await createTests(modelTests);
   } catch (error) {

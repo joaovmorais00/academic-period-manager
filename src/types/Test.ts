@@ -8,6 +8,7 @@ export interface Test {
   worth?: string;
   link?: string;
   typeTest: string;
+  local?: string;
 }
 
 export interface ModelTest {
@@ -21,6 +22,7 @@ export interface ModelTest {
   worth?: number;
   link?: string;
   type: string;
+  local?: string;
 }
 
 export interface SchedulerTests {

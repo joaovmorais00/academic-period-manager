@@ -88,6 +88,7 @@ export default function SchedulerClassForm({
           endDate: "",
           startTime: "",
           endTime: "",
+          local: "",
         },
       ],
       subjectId: "",
@@ -204,7 +205,7 @@ export default function SchedulerClassForm({
                     {...register(`classes.${index}.endDate`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -216,7 +217,7 @@ export default function SchedulerClassForm({
                     {...register(`classes.${index}.startTime`)}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
                   <TextField
                     type="time"
                     InputLabelProps={{ shrink: true }}
@@ -228,7 +229,7 @@ export default function SchedulerClassForm({
                     {...register(`classes.${index}.endTime`)}
                   />
                 </Grid>
-                <Grid item xs={classesDates.length > 1 ? 3 : 4}>
+                <Grid item xs={3}>
                   <Controller
                     name={`classes.${index}.daysOfWeek`}
                     control={control}
@@ -256,6 +257,18 @@ export default function SchedulerClassForm({
                     )}
                   />
                 </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    fullWidth
+                    id={`classes.${index}.local`}
+                    label="Local"
+                    InputLabelProps={{ shrink: true }}
+                    autoFocus
+                    error={!!errors.classes?.[index]?.local}
+                    helperText={errors.classes?.[index]?.local?.message}
+                    {...register(`classes.${index}.local`)}
+                  />
+                </Grid>
               </Grid>
             ))}
           </Grid>
@@ -271,6 +284,7 @@ export default function SchedulerClassForm({
                   startTime: "",
                   endTime: "",
                   daysOfWeek: [],
+                  local: "",
                 })
               }
             >

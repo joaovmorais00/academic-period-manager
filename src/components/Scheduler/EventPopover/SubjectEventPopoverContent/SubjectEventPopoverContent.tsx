@@ -22,6 +22,9 @@ export default function SubjectEventPopoverContent({ event }: Props) {
           Descrição: {event?.extendedProps.infos?.description}
         </Typography>
       )}
+      {event?.extendedProps.infos?.local && (
+        <Typography>Local: {event?.extendedProps.infos?.local}</Typography>
+      )}
     </>
   );
 }

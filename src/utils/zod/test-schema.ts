@@ -10,6 +10,7 @@ export const ZTestSchema = z.object({
   score: z.string().optional(),
   link: z.string().optional(),
   typeTest: z.string(),
+  local: z.string().optional(),
 });
 
 export const ZSchedulerTestSchema = z.object({
